@@ -1,12 +1,96 @@
 ﻿<Window x:Class="QUAN_LY_THUE_XE.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:QUAN_LY_THUE_XE"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="HỆ THỐNG QUẢN LÝ CHO THUÊ XE - UIT" 
+        Height="700" Width="1150"
+        MinHeight="600" MinWidth="950"
+        WindowStartupLocation="CenterScreen">
 
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="250"/>
+            <!-- Cột Menu bên trái -->
+            <ColumnDefinition Width="*"/>
+            <!-- Vùng hiển thị nội dung bên phải -->
+        </Grid.ColumnDefinitions>
+
+        <!-- ================= SIDEBAR MENU BÊN TRÁI ================= -->
+        <Border Grid.Column="0" Background="#0F172A">
+            <DockPanel LastChildFill="True">
+
+                <!-- 1. Header Logo & Tên App -->
+                <StackPanel DockPanel.Dock="Top" Margin="20,25,20,20">
+                    <TextBlock Text="🚗 THUÊ XE AUTO" Foreground="White" FontSize="20" FontWeight="ExtraBold"/>
+                    <TextBlock Text="Hệ thống Quản trị &amp; Điều hành" Foreground="#94A3B8" FontSize="11" Margin="0,4,0,0"/>
+                    <Separator Background="#1E293B" Margin="0,15,0,10"/>
+                </StackPanel>
+
+                <!-- 2. Thông tin Admin ở dưới đáy Sidebar -->
+                <Border DockPanel.Dock="Bottom" Background="#1E293B" Margin="15" CornerRadius="10" Padding="12">
+                    <StackPanel>
+                        <TextBlock Text="👤 Quản Trị Viên (Admin)" Foreground="White" FontWeight="Bold" FontSize="13"/>
+                        <TextBlock Text="admin@uit.edu.vn" Foreground="#94A3B8" FontSize="11" Margin="0,2,0,0"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- 3. Danh sách các nút bấm chuyển màn hình -->
+                <StackPanel Margin="12,0">
+                    <!-- Nút 1: Dashboard -->
+                    <Button x:Name="btnDashboard" Content="📊  Tổng quan &amp; Báo cáo" Height="46" Margin="0,4"
+                            Background="#2563EB" Foreground="White" BorderThickness="0"
+                            HorizontalContentAlignment="Left" Padding="18,0" FontSize="13" FontWeight="SemiBold"
+                            Click="BtnDashboard_Click">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="8"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+
+                    <!-- Nút 2: Quản lý Xe -->
+                    <Button x:Name="btnVehicle" Content="🚘  Quản lý Đội xe" Height="46" Margin="0,4"
+                            Background="Transparent" Foreground="#94A3B8" BorderThickness="0"
+                            HorizontalContentAlignment="Left" Padding="18,0" FontSize="13" FontWeight="SemiBold"
+                            Click="BtnVehicle_Click">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="8"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+
+                    <!-- Nút 3: Thuê & Trả xe -->
+                    <Button x:Name="btnRental" Content="📝  Hợp đồng Thuê - Trả" Height="46" Margin="0,4"
+                            Background="Transparent" Foreground="#94A3B8" BorderThickness="0"
+                            HorizontalContentAlignment="Left" Padding="18,0" FontSize="13" FontWeight="SemiBold"
+                            Click="BtnRental_Click">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="8"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+
+                    <!-- Nút 4: Khách hàng -->
+                    <Button x:Name="btnCustomer" Content="👥  Hồ sơ Khách hàng" Height="46" Margin="0,4"
+                            Background="Transparent" Foreground="#94A3B8" BorderThickness="0"
+                            HorizontalContentAlignment="Left" Padding="18,0" FontSize="13" FontWeight="SemiBold"
+                            Click="BtnCustomer_Click">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="8"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+                </StackPanel>
+
+            </DockPanel>
+        </Border>
+
+        <!-- ================= VÙNG HIỂN THỊ NỘI DUNG (BÊN PHẢI) ================= -->
+        <Border Grid.Column="1" Background="#F1F5F9">
+            <!-- Vùng này sẽ tự nạp màn hình con vào đây khi bấm menu -->
+            <ContentControl x:Name="MainContentArea"/>
+        </Border>
     </Grid>
 </Window>
