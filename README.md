@@ -10,8 +10,8 @@
 | STT | Họ và Tên | MSSV | Vai trò | Nhánh Git phụ trách | 
 | :---: | :--- | :--- | :--- | :--- |
 | 1 | **Võ Nguyễn Thế Phú** | `25521415` | Kiến trúc hệ thống, Đăng nhập phân quyền, Hợp đồng Thuê/Trả & Giao nhận xe | `feature/rental-auth` |
-| 2 | `Nguyễn Ngọc Vinh Huy` | `25520712` | Quản lý Đội xe, Lịch sử bảo dưỡng, Hóa đơn & Thanh toán VietQR | `feature/vehicle` |
-| 3 | `Trần Minh Hoàng  ` | `25520606` | Quản lý Hồ sơ Khách hàng, Dashboard Thống kê doanh thu & Xuất báo cáo | `feature/customer-dashboard` |
+| 2 | **Nguyễn Ngọc Vinh Huy** | `25520712` | Quản lý Đội xe, Lịch sử bảo dưỡng, Hóa đơn & Thanh toán VietQR | `feature/vehicle` |
+| 3 | **Trần Minh Hoàng** | `25520606` | Quản lý Hồ sơ Khách hàng, Dashboard Thống kê doanh thu & Xuất báo cáo | `feature/customer-dashboard` |
 
 ---
 
