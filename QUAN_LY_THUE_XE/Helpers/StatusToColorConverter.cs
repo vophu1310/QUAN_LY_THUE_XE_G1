@@ -14,8 +14,10 @@ namespace QUAN_LY_THUE_XE.Helpers
             return status switch
             {
                 "Sẵn sàng" => new SolidColorBrush(Colors.ForestGreen),
-                "Đang thuê" => new SolidColorBrush(Colors.DarkOrange),
+                "Đã đặt" or "Đang được đặt" => new SolidColorBrush(Colors.DodgerBlue), // Màu xanh dương
+                "Đang thuê" or "Đang cho thuê" => new SolidColorBrush(Colors.DarkOrange),
                 "Đang bảo dưỡng" => new SolidColorBrush(Colors.Crimson),
+                "Ngưng hoạt động" => new SolidColorBrush(Colors.DimGray), // Màu xám tối
                 _ => new SolidColorBrush(Colors.Gray)
             };
         }
