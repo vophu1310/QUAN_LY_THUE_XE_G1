@@ -7,7 +7,7 @@
 
 ## 👥 Thành viên thực hiện (Nhóm 3 thành viên)
 
-| STT | Họ và Tên | MSSV | Vai trò | Nhánh Git phụ trách |
+| STT | Họ và Tên | MSSV | Vai trò | Nhánh Git phụ trách | 
 | :---: | :--- | :--- | :--- | :--- |
 | 1 | **Võ Nguyễn Thế Phú** | `25521415` | Kiến trúc hệ thống, Đăng nhập phân quyền, Hợp đồng Thuê/Trả & Giao nhận xe | `feature/rental-auth` |
 | 2 | `Nguyễn Ngọc Vinh Huy` | `25520712` | Quản lý Đội xe, Lịch sử bảo dưỡng, Hóa đơn & Thanh toán VietQR | `feature/vehicle` |
