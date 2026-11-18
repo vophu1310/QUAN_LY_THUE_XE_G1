@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using QUAN_LY_THUE_XE.Models;
 
 namespace QUAN_LY_THUE_XE.Data
@@ -10,8 +11,10 @@ namespace QUAN_LY_THUE_XE.Data
         {
 
             //context.Database.EnsureDeleted();// Xóa CSDL cũ (nếu có) để tạo lại từ đầu, chỉ dùng khi phát triển
-            // Tự động tạo CSDL nếu chưa có
+            // Tự động tạo CSDL nếu chưa có.
             context.Database.EnsureCreated();
+            // Bổ sung cột cho DB đã tồn tại; DEFAULT 0 giữ nguyên dữ liệu khách hàng cũ.
+            context.Database.ExecuteSqlRaw("IF COL_LENGTH(N'dbo.KhachHangs', N'IsBlacklisted') IS NULL ALTER TABLE [dbo].[KhachHangs] ADD [IsBlacklisted] bit NOT NULL CONSTRAINT [DF_KhachHangs_IsBlacklisted] DEFAULT (0);");
 
             // 1. Tạo tài khoản mặc định nếu bảng Tài Khoản đang trống
             if (!context.TaiKhoans.Any())
