@@ -5,7 +5,7 @@ using QUAN_LY_THUE_XE.Models;
 
 namespace QUAN_LY_THUE_XE.Services
 {
-    // Lớp này chịu trách nhiệm duy nhất: Xác thực đăng nhập//Không làm ảnh hưởng giao diện, khác với ViewModel
+    //  Check đăng nhập của người dùng => đúng login 
     public class AuthService
     {
         private readonly AppDbContext _context;

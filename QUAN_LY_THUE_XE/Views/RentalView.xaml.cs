@@ -1,26 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using QUAN_LY_THUE_XE.ViewModels;
 
 namespace QUAN_LY_THUE_XE.Views
 {
-    /// <summary>
-    /// Interaction logic for RentalView.xaml
-    /// </summary>
     public partial class RentalView : UserControl
     {
         public RentalView()
         {
             InitializeComponent();
+            // Gán ViewModel làm bộ não điều khiển cho giao diện
+            DataContext = new RentalViewModel();
+        }
+
+        private void BtnLuuNhap_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show(
+                "Đã lưu tạm thông tin hợp đồng vào danh sách Bản nháp!",
+                "Thông báo",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
         }
     }
 }
