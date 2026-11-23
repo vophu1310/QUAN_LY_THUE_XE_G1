@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
@@ -48,6 +48,13 @@ namespace QUAN_LY_THUE_XE.Services
         {
             try
             {
+                // Kiểm tra tính hợp lệ: Xe phải tồn tại và đang ở trạng thái "Sẵn sàng"
+                var xe = _context.Xes.Find(maXe);
+                if (xe == null || xe.TrangThai != "Sẵn sàng")
+                {
+                    return false;
+                }
+
                 // Bước 4.1: Tạo đơn thuê mới
                 var donThue = new DonThue
                 {
@@ -63,11 +70,7 @@ namespace QUAN_LY_THUE_XE.Services
                 _context.DonThues.Add(donThue);
 
                 // Bước 4.2: Tự động đổi trạng thái chiếc xe sang "Đang thuê"
-                var xe = _context.Xes.Find(maXe);
-                if (xe != null)
-                {
-                    xe.TrangThai = "Đang thuê";
-                }
+                xe.TrangThai = "Đang thuê";
 
                 // Lưu thay đổi xuống CSDL SQL Server
                 _context.SaveChanges();

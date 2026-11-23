@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using QUAN_LY_THUE_XE.Models;
 
 namespace QUAN_LY_THUE_XE.Data

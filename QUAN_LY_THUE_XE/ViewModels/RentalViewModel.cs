@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
@@ -49,9 +49,22 @@ namespace QUAN_LY_THUE_XE.ViewModels
             {
                 _xeDuocChon = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(CoXeSanSang));
+                OnPropertyChanged(nameof(HetXe));
+                OnPropertyChanged(nameof(ChiTietDonGiaThue));
                 TinhToanChiPhi();
+                ThongBaoLoi = "";
             }
         }
+
+        // Thuộc tính cờ trạng thái: Còn xe sẵn sàng và Hết xe
+        public bool CoXeSanSang => DanhSachXe.Count > 0 && XeDuocChon != null;
+        public bool HetXe => DanhSachXe.Count == 0;
+
+        // Chi tiết công thức tính tiền thuê hiển thị trên hóa đơn
+        public string ChiTietDonGiaThue => XeDuocChon != null
+            ? $"{SoNgayThue} ngày x {XeDuocChon.GiaThueNgay:N0} đ"
+            : "0 ngày x 0 đ";
 
         // 4. Ngày thuê và ngày trả
         private DateTime _ngayBatDau = DateTime.Today;
@@ -63,6 +76,7 @@ namespace QUAN_LY_THUE_XE.ViewModels
                 _ngayBatDau = value;
                 OnPropertyChanged();
                 TinhToanChiPhi();
+                OnPropertyChanged(nameof(ChiTietDonGiaThue));
             }
         }
 
@@ -75,6 +89,7 @@ namespace QUAN_LY_THUE_XE.ViewModels
                 _ngayKetThuc = value;
                 OnPropertyChanged();
                 TinhToanChiPhi();
+                OnPropertyChanged(nameof(ChiTietDonGiaThue));
             }
         }
 
@@ -157,7 +172,7 @@ namespace QUAN_LY_THUE_XE.ViewModels
                     TabDangChon = tabIndex;
             });
 
-            TaoDonThueCommand = new RelayCommand(ThucHienTaoDonThue);
+            TaoDonThueCommand = new RelayCommand(ThucHienTaoDonThue, _ => CoXeSanSang);
             TraXeCommand = new RelayCommand(ThucHienTraXe);
             LamMoiCommand = new RelayCommand(_ => LoadDuLieu());
 
@@ -168,18 +183,35 @@ namespace QUAN_LY_THUE_XE.ViewModels
         {
             using var context = new AppDbContext();
 
-            // Cập nhật xe Mazda CX-5 làm xe mặc định nếu xe này đã có trong CSDL.
-            var xeMacDinh = context.Xes.FirstOrDefault(x =>
-                x.HangXe == "Mazda" || x.TenXe.Contains("CX-5"));
-
-            // Nếu CSDL chưa có xe Mazda thì dùng bản ghi đầu tiên để tạo dữ liệu mẫu.
-            xeMacDinh ??= context.Xes.FirstOrDefault();
-            if (xeMacDinh != null)
+            // Khởi tạo dữ liệu xe mẫu nếu CSDL chưa có xe nào
+            if (!context.Xes.Any())
             {
-                xeMacDinh.TenXe = "Mazda CX-5 2.0 Premium";
-                xeMacDinh.BienSo = "51K-888.88";
-                xeMacDinh.HangXe = "Mazda";
-                xeMacDinh.GiaThueNgay = 1000000; // Giá thuê 1.000.000 đ / ngày
+                context.Xes.AddRange(
+                    new Xe
+                    {
+                        BienSo = "51K-888.88",
+                        TenXe = "Mazda CX-5 2.0 Premium",
+                        HangXe = "Mazda",
+                        NamSanXuat = 2023,
+                        SoChoNgoi = 5,
+                        GiaThueNgay = 1000000,
+                        SoKmHienTai = 8000,
+                        TrangThai = "Sẵn sàng",
+                        HinhAnh = "https://i.postimg.cc/QdT44Lxc/2022-mazda-cx-5-2p5-turbo-signature-123-1657559083.avif"
+                    },
+                    new Xe
+                    {
+                        BienSo = "51F-123.45",
+                        TenXe = "Toyota Vios 1.5G",
+                        HangXe = "Toyota",
+                        NamSanXuat = 2022,
+                        SoChoNgoi = 5,
+                        GiaThueNgay = 700000,
+                        SoKmHienTai = 15000,
+                        TrangThai = "Sẵn sàng",
+                        HinhAnh = ""
+                    }
+                );
                 context.SaveChanges();
             }
 
@@ -209,15 +241,17 @@ namespace QUAN_LY_THUE_XE.ViewModels
                 context.SaveChanges();
             }
 
-            // Nạp danh sách
+            // Nạp danh sách Khách hàng
             DanhSachKhachHang.Clear();
             foreach (var kh in _rentalService.LayDanhSachKhachHang())
                 DanhSachKhachHang.Add(kh);
 
+            // Nạp danh sách Xe đang sẵn sàng
             DanhSachXe.Clear();
             foreach (var xe in _rentalService.LayDanhSachXeSanSang())
                 DanhSachXe.Add(xe);
 
+            // Nạp danh sách Hợp đồng
             DanhSachDonThue.Clear();
             foreach (var dt in _rentalService.LayDanhSachDonThue())
                 DanhSachDonThue.Add(dt);
@@ -225,12 +259,28 @@ namespace QUAN_LY_THUE_XE.ViewModels
             if (KhachHangDuocChon == null && DanhSachKhachHang.Count > 0)
                 KhachHangDuocChon = DanhSachKhachHang[0];
 
+            // LOGIC XỬ LÝ LỰA CHỌN XE & HẾT XE
             if (DanhSachXe.Count > 0)
             {
-                XeDuocChon = DanhSachXe.FirstOrDefault(x =>
-                    x.HangXe == "Mazda" || x.TenXe.Contains("CX-5"))
-                    ?? DanhSachXe[0];
+                // Nếu xe đang chọn vẫn còn trong danh sách xe sẵn sàng thì giữ nguyên
+                if (XeDuocChon == null || !DanhSachXe.Any(x => x.MaXe == XeDuocChon.MaXe))
+                {
+                    XeDuocChon = DanhSachXe.FirstOrDefault(x =>
+                        x.HangXe == "Mazda" || x.TenXe.Contains("CX-5"))
+                        ?? DanhSachXe[0];
+                }
+                ThongBaoLoi = "";
             }
+            else
+            {
+                // QUAN TRỌNG: Khi hết xe sẵn sàng, BẮT BUỘC reset XeDuocChon về null!
+                XeDuocChon = null;
+                ThongBaoLoi = "⚠️ Hiện tại tất cả các xe đều đang được thuê hoặc đang bảo dưỡng. Vui lòng nhận xe trả ở tab 'Danh sách hợp đồng' hoặc quay lại sau!";
+            }
+
+            OnPropertyChanged(nameof(CoXeSanSang));
+            OnPropertyChanged(nameof(HetXe));
+            OnPropertyChanged(nameof(ChiTietDonGiaThue));
 
             TinhToanChiPhi();
         }
@@ -269,9 +319,17 @@ namespace QUAN_LY_THUE_XE.ViewModels
                 return;
             }
 
-            if (XeDuocChon == null)
+            if (HetXe || XeDuocChon == null)
             {
-                ThongBaoLoi = "Vui lòng chọn xe cần thuê!";
+                ThongBaoLoi = "Hiện tại không còn xe nào sẵn sàng để tạo hợp đồng thuê!";
+                return;
+            }
+
+            // Kiểm tra kép xem xe có còn đang sẵn sàng không (tránh trường hợp xe vừa được thuê bởi phiên khác)
+            if (!DanhSachXe.Any(x => x.MaXe == XeDuocChon.MaXe))
+            {
+                ThongBaoLoi = $"Xe '{XeDuocChon.TenXe}' hiện không còn sẵn sàng (vừa có khách thuê hoặc bảo dưỡng). Vui lòng chọn xe khác!";
+                LoadDuLieu();
                 return;
             }
 
@@ -300,7 +358,8 @@ namespace QUAN_LY_THUE_XE.ViewModels
             }
             else
             {
-                ThongBaoLoi = "Lỗi khi lưu hợp đồng vào cơ sở dữ liệu!";
+                ThongBaoLoi = "Lỗi khi lưu hợp đồng vào cơ sở dữ liệu! Xe có thể vừa được người khác thuê trước.";
+                LoadDuLieu();
             }
         }
 
