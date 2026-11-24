@@ -52,6 +52,7 @@ namespace QUAN_LY_THUE_XE.ViewModels
                 OnPropertyChanged(nameof(CoXeSanSang));
                 OnPropertyChanged(nameof(HetXe));
                 OnPropertyChanged(nameof(ChiTietDonGiaThue));
+                OnPropertyChanged(nameof(HinhAnhHienThi));
                 TinhToanChiPhi();
                 ThongBaoLoi = "";
             }
@@ -65,6 +66,11 @@ namespace QUAN_LY_THUE_XE.ViewModels
         public string ChiTietDonGiaThue => XeDuocChon != null
             ? $"{SoNgayThue} ngày x {XeDuocChon.GiaThueNgay:N0} đ"
             : "0 ngày x 0 đ";
+
+        // Ảnh đại diện xe hiển thị theo xe đang chọn (mặc định là Mazda CX-5 nếu chưa có ảnh)
+        public string HinhAnhHienThi => !string.IsNullOrEmpty(XeDuocChon?.HinhAnh)
+            ? XeDuocChon.HinhAnh
+            : "https://i.postimg.cc/QdT44Lxc/2022-mazda-cx-5-2p5-turbo-signature-123-1657559083.avif";
 
         // 4. Ngày thuê và ngày trả
         private DateTime _ngayBatDau = DateTime.Today;
@@ -209,10 +215,28 @@ namespace QUAN_LY_THUE_XE.ViewModels
                         GiaThueNgay = 700000,
                         SoKmHienTai = 15000,
                         TrangThai = "Sẵn sàng",
-                        HinhAnh = ""
+                        HinhAnh = "https://i.postimg.cc/HW72tK0P/images.jpg"
                     }
                 );
                 context.SaveChanges();
+            }
+            else
+            {
+                // Cập nhật ảnh cho Toyota Vios nếu trong CSDL đã có bản ghi
+                var vios = context.Xes.FirstOrDefault(x => x.TenXe.Contains("Vios") || x.BienSo == "51F-123.45");
+                if (vios != null && vios.HinhAnh != "https://i.postimg.cc/HW72tK0P/images.jpg")
+                {
+                    vios.HinhAnh = "https://i.postimg.cc/HW72tK0P/images.jpg";
+                    context.SaveChanges();
+                }
+
+                // Cập nhật ảnh cho Mazda CX-5 nếu chưa có
+                var mazda = context.Xes.FirstOrDefault(x => x.HangXe == "Mazda" || x.TenXe.Contains("CX-5"));
+                if (mazda != null && string.IsNullOrEmpty(mazda.HinhAnh))
+                {
+                    mazda.HinhAnh = "https://i.postimg.cc/QdT44Lxc/2022-mazda-cx-5-2p5-turbo-signature-123-1657559083.avif";
+                    context.SaveChanges();
+                }
             }
 
             if (!context.KhachHangs.Any())
@@ -281,6 +305,7 @@ namespace QUAN_LY_THUE_XE.ViewModels
             OnPropertyChanged(nameof(CoXeSanSang));
             OnPropertyChanged(nameof(HetXe));
             OnPropertyChanged(nameof(ChiTietDonGiaThue));
+            OnPropertyChanged(nameof(HinhAnhHienThi));
 
             TinhToanChiPhi();
         }

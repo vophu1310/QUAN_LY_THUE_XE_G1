@@ -82,7 +82,7 @@
         <!-- ==================== HÀNG 1: NỘI DUNG 2 TAB ==================== -->
         <Grid Grid.Row="1">
 
-            <!-- ================= TAB 0: LẬP HỢP ĐỒNG MỚI (4 KHỐI CHUẨN FIGMA) ================= -->
+            <!-- ================= TAB 0: LẬP HỢP ĐỒNG MỚI ================= -->
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                 <ScrollViewer.Style>
                     <Style TargetType="ScrollViewer">
@@ -206,7 +206,7 @@
 
                                 <Border CornerRadius="10" ClipToBounds="True" Height="190" Background="#F1F5F9" Margin="0,0,0,14">
                                     <Grid>
-                                        <Image Source="https://i.postimg.cc/QdT44Lxc/2022-mazda-cx-5-2p5-turbo-signature-123-1657559083.avif" 
+                                        <Image Source="{Binding HinhAnhHienThi}" 
                                                Stretch="UniformToFill">
                                             <Image.Style>
                                                 <Style TargetType="Image">

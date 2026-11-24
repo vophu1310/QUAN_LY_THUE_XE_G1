@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using QUAN_LY_THUE_XE.Models;
 
@@ -40,7 +40,7 @@ namespace QUAN_LY_THUE_XE.Data
                         GiaThueNgay = 700000,
                         SoKmHienTai = 15000,
                         TrangThai = "Sẵn sàng",
-                        HinhAnh = ""
+                        HinhAnh = "https://i.postimg.cc/HW72tK0P/images.jpg"
                     },
                     new Xe
                     {
@@ -52,7 +52,7 @@ namespace QUAN_LY_THUE_XE.Data
                         GiaThueNgay = 1200000,
                         SoKmHienTai = 8000,
                         TrangThai = "Sẵn sàng",
-                        HinhAnh = "",
+                        HinhAnh = "https://i.postimg.cc/QdT44Lxc/2022-mazda-cx-5-2p5-turbo-signature-123-1657559083.avif",
                     },
                     new Xe
                     {

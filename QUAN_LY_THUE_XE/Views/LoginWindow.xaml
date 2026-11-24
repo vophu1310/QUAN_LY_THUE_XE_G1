@@ -125,13 +125,13 @@
 
                             <!-- Vùng bấm icon con mắt -->
                             <Border Grid.Column="2" Background="Transparent" Cursor="Hand" Padding="6"
-                                    PreviewMouseDown="TogglePasswordVisibility_Click">
+                                    PreviewMouseDown="TogglePasswordVisibility_Click"> <!-- Đảo trạng thái thuộc tính Visibility-->
                                 <materialDesign:PackIcon Kind="EyeOutline" Width="20" Height="20" 
                                                          Foreground="#94A3B8" VerticalAlignment="Center"/>
                             </Border>
                         </Grid>
                     </Border>
-                    <!-- BÁO LỖI MẬT KHẨU (NẰM DƯỚI HỘP, KHÔNG CÓ BẤT KỲ ICON THỪA NÀO) -->
+                    <!-- BÁO LỖI MẬT KHẨU (NẰM DƯỚI HỘP) -->
                     <TextBlock Text="{Binding LoiMatKhau}" Foreground="#EF4444" FontSize="12" 
                                FontWeight="Medium" Margin="4,4,0,12"/>
 
@@ -152,7 +152,7 @@
                                FontWeight="Medium" HorizontalAlignment="Center" 
                                Margin="0,0,0,10" TextWrapping="Wrap"/>
 
-                    <!-- Nút Đăng nhập xanh rêu chuẩn Figma -->
+                    <!-- Nút Đăng nhập xanh rêu -->
                     <Button Content="Đăng nhập  ➔" 
                             Background="#1E3E34" BorderBrush="#1E3E34" Foreground="White"
                             Height="48" FontSize="15" FontWeight="SemiBold"
