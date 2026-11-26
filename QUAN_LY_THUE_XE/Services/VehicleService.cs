@@ -9,7 +9,7 @@ namespace QUAN_LY_THUE_XE.Services
 {
     public class VehicleService
     {
-        private static readonly HashSet<string> TrangThaiKhongDuocXoa = new(StringComparer.OrdinalIgnoreCase)
+        private static readonly HashSet<string> TrangThaiDangBan = new(StringComparer.OrdinalIgnoreCase)
         {
             "Đang thuê",
             "Đang cho thuê",
@@ -17,6 +17,7 @@ namespace QUAN_LY_THUE_XE.Services
             "Đang được đặt"
         };
 
+        // 1. Lấy toàn bộ danh sách xe từ SQL Server (bảng Xe)
         public List<Xe> LayTatCaXe()
         {
             using var context = new AppDbContext();
@@ -26,6 +27,7 @@ namespace QUAN_LY_THUE_XE.Services
                 .ToList();
         }
 
+        // 2. Lấy 3 chỉ số KPI hiển thị góc trên phải
         public (int TongSo, int SanSang, int DangThue) LayThongKeXe()
         {
             using var context = new AppDbContext();
@@ -41,6 +43,7 @@ namespace QUAN_LY_THUE_XE.Services
             return (tong, sanSang, dangThue);
         }
 
+        // 3. Thêm xe mới vào bảng Xe
         public (bool ThanhCong, string ThongBao) ThemXe(Xe xeMoi)
         {
             try
@@ -69,6 +72,7 @@ namespace QUAN_LY_THUE_XE.Services
             }
         }
 
+        // 4. Cập nhật thông tin xe
         public (bool ThanhCong, string ThongBao) CapNhatXe(Xe xeCapNhat)
         {
             try
@@ -86,10 +90,11 @@ namespace QUAN_LY_THUE_XE.Services
                     return (false, $"Biển số {bienSoChuan} đang thuộc về một xe khác.");
                 }
 
-                // BR-01: Chỉ được chuyển sang Ngưng hoạt động khi xe đang ở bãi
-                if (TrangThaiKhongDuocXoa.Contains(xeTrongDb.TrangThai) && xeCapNhat.TrangThai == "Ngưng hoạt động")
+                // BR-01: Không cho chuyển xe đang thuê/đặt sang Ngưng hoạt động hoặc Đang bảo dưỡng
+                if (TrangThaiDangBan.Contains(xeTrongDb.TrangThai) &&
+                    (xeCapNhat.TrangThai == "Ngưng hoạt động" || xeCapNhat.TrangThai == "Đang bảo dưỡng"))
                 {
-                    return (false, "BR-01: Xe đang được đặt hoặc đang cho thuê, chỉ được chuyển sang 'Ngưng hoạt động' khi xe đang ở bãi.");
+                    return (false, $"BR-01: Xe đang ở trạng thái '{xeTrongDb.TrangThai}', chỉ được đổi sang '{xeCapNhat.TrangThai}' khi xe đã trả về bãi.");
                 }
 
                 xeTrongDb.BienSo = bienSoChuan;
@@ -112,7 +117,8 @@ namespace QUAN_LY_THUE_XE.Services
             }
         }
 
-        public (bool ThanhCong, string ThongBao) XoaXe(int maXe)
+        // 5. Đổi trạng thái sang "Đang bảo dưỡng" (hoặc hoàn tất bảo dưỡng về lại "Sẵn sàng")
+        public (bool ThanhCong, string ThongBao) ChuyenTrangThaiBaoDuong(int maXe)
         {
             try
             {
@@ -120,31 +126,28 @@ namespace QUAN_LY_THUE_XE.Services
                 var xe = context.Xes.Find(maXe);
                 if (xe == null)
                 {
-                    return (false, "Phương tiện không còn tồn tại trong hệ thống.");
+                    return (false, "Không tìm thấy phương tiện trong cơ sở dữ liệu.");
                 }
 
-                // BR-01: Chặn xóa xe đang được đặt hoặc đang cho thuê
-                if (TrangThaiKhongDuocXoa.Contains(xe.TrangThai))
+                if (TrangThaiDangBan.Contains(xe.TrangThai))
                 {
-                    return (false, $"BR-01: Không thể xóa xe '{xe.TenXe}' vì đang ở trạng thái '{xe.TrangThai}'.");
+                    return (false, $"Không thể chuyển sang 'Đang bảo dưỡng' vì xe '{xe.TenXe}' hiện đang ở trạng thái '{xe.TrangThai}'.");
                 }
 
-                if (context.DonThues.Any(d => d.MaXe == maXe))
-                {
-                    return (false, $"Xe '{xe.TenXe}' đã phát sinh hợp đồng thuê trước đây nên không thể xóa cứng. Hãy chuyển trạng thái sang 'Ngưng hoạt động'.");
-                }
-
-                context.Xes.Remove(xe);
+                string trangThaiMoi = xe.TrangThai == "Đang bảo dưỡng" ? "Sẵn sàng" : "Đang bảo dưỡng";
+                xe.TrangThai = trangThaiMoi;
                 context.SaveChanges();
-                return (true, $"Đã xóa xe {xe.TenXe} ({xe.BienSo}) khỏi hệ thống.");
+
+                return (true, $"Đã chuyển xe {xe.TenXe} ({xe.BienSo}) sang trạng thái '{trangThaiMoi}'.");
             }
             catch (Exception ex)
             {
-                return (false, $"Không thể xóa xe: {ex.Message}");
+                return (false, $"Không thể cập nhật trạng thái bảo dưỡng: {ex.Message}");
             }
         }
 
-        public (bool ThanhCong, string ThongBao) ChuyenTrangThaiNhanh(int maXe, string trangThaiMoi)
+        // 6. Xóa mềm: chuyển sang "Ngưng hoạt động" (hoặc khôi phục về "Sẵn sàng")
+        public (bool ThanhCong, string ThongBao) XoaMemXe(int maXe)
         {
             try
             {
@@ -152,21 +155,25 @@ namespace QUAN_LY_THUE_XE.Services
                 var xe = context.Xes.Find(maXe);
                 if (xe == null)
                 {
-                    return (false, "Không tìm thấy phương tiện.");
+                    return (false, "Không tìm thấy phương tiện trong cơ sở dữ liệu.");
                 }
 
-                if (TrangThaiKhongDuocXoa.Contains(xe.TrangThai) && trangThaiMoi == "Ngưng hoạt động")
+                if (TrangThaiDangBan.Contains(xe.TrangThai))
                 {
-                    return (false, "BR-01: Chỉ được chuyển sang 'Ngưng hoạt động' khi xe đang ở bãi.");
+                    return (false, $"BR-01: Không thể xóa mềm xe '{xe.TenXe}' vì đang ở trạng thái '{xe.TrangThai}'.");
                 }
 
+                string trangThaiMoi = xe.TrangThai == "Ngưng hoạt động" ? "Sẵn sàng" : "Ngưng hoạt động";
                 xe.TrangThai = trangThaiMoi;
                 context.SaveChanges();
-                return (true, $"Đã chuyển xe {xe.TenXe} sang trạng thái '{trangThaiMoi}'.");
+
+                return (true, trangThaiMoi == "Ngưng hoạt động"
+                    ? $"Đã xóa mềm xe {xe.TenXe} ({xe.BienSo}) — chuyển sang 'Ngưng hoạt động'."
+                    : $"Đã khôi phục xe {xe.TenXe} ({xe.BienSo}) về trạng thái 'Sẵn sàng'.");
             }
             catch (Exception ex)
             {
-                return (false, $"Không thể đổi trạng thái: {ex.Message}");
+                return (false, $"Không thể cập nhật trạng thái xe: {ex.Message}");
             }
         }
     }
