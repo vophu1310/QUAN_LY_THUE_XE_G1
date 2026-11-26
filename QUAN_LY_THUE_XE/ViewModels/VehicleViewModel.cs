@@ -42,6 +42,15 @@ namespace QUAN_LY_THUE_XE.ViewModels
             "Ngưng hoạt động"
         };
 
+        public List<string> DanhSachLocTrangThai { get; } = new()
+        {
+            "Tất cả trạng thái",
+            "Sẵn sàng",
+            "Đang thuê",
+            "Đang bảo dưỡng",
+            "Ngưng hoạt động"
+        };
+
         public List<string> DanhSachHangXeGoiY { get; } = new()
         {
             "Toyota", "Mazda", "Ford", "VinFast", "Hyundai", "Kia", "Mitsubishi", "Honda"
@@ -106,13 +115,13 @@ namespace QUAN_LY_THUE_XE.ViewModels
             }
         }
 
-        private string _locTrangThaiKpi = string.Empty;
-        public string LocTrangThaiKpi
+        private string _trangThaiLocDangChon = "Tất cả trạng thái";
+        public string TrangThaiLocDangChon
         {
-            get => _locTrangThaiKpi;
+            get => _trangThaiLocDangChon;
             set
             {
-                if (SetProperty(ref _locTrangThaiKpi, value))
+                if (SetProperty(ref _trangThaiLocDangChon, value))
                 {
                     TrangHienTai = 1;
                     ApDungBoLocVaPhanTrang();
@@ -153,8 +162,10 @@ namespace QUAN_LY_THUE_XE.ViewModels
             get
             {
                 if (_xeSauLoc.Count == 0) return "Không có phương tiện phù hợp";
-                string locTrangThai = string.IsNullOrEmpty(LocTrangThaiKpi) ? string.Empty : $" • Trạng thái: {LocTrangThaiKpi}";
-                return $"Hiển thị {DanhSachXeHienThi.Count} / {_xeSauLoc.Count} xe{locTrangThai}";
+                string nhanTrangThai = TrangThaiLocDangChon == "Tất cả trạng thái"
+                    ? string.Empty
+                    : $" • Trạng thái: {TrangThaiLocDangChon}";
+                return $"Hiển thị {DanhSachXeHienThi.Count} / {_xeSauLoc.Count} xe{nhanTrangThai}";
             }
         }
 
@@ -172,7 +183,7 @@ namespace QUAN_LY_THUE_XE.ViewModels
             set => SetProperty(ref _thongBaoHeThong, value);
         }
 
-        // ================= 3. MODAL THÊM / SỬA XE =================
+        // ================= 3. POPUP THÊM / SỬA XE =================
         private bool _dangMoForm;
         public bool DangMoForm
         {
@@ -227,7 +238,7 @@ namespace QUAN_LY_THUE_XE.ViewModels
         private string _thongBaoLoiForm = string.Empty;
         public string ThongBaoLoiForm { get => _thongBaoLoiForm; set => SetProperty(ref _thongBaoLoiForm, value); }
 
-        // ================= 4. MODAL CHI TIẾT XE =================
+        // ================= 4. POPUP CHI TIẾT XE =================
         private bool _dangMoChiTiet;
         public bool DangMoChiTiet
         {
@@ -242,12 +253,18 @@ namespace QUAN_LY_THUE_XE.ViewModels
             set
             {
                 if (SetProperty(ref _xeChiTiet, value))
-                    OnPropertyChanged(nameof(NutNgungHoatDongText));
+                {
+                    OnPropertyChanged(nameof(NutXoaMemText));
+                    OnPropertyChanged(nameof(NutBaoDuongText));
+                }
             }
         }
 
-        public string NutNgungHoatDongText =>
+        public string NutXoaMemText =>
             XeChiTiet?.TrangThai == "Ngưng hoạt động" ? "Mở lại Sẵn sàng" : "Ngưng hoạt động";
+
+        public string NutBaoDuongText =>
+            XeChiTiet?.TrangThai == "Đang bảo dưỡng" ? "Hoàn tất bảo dưỡng" : "Đưa đi bảo dưỡng";
 
         // ================= 5. COMMANDS =================
         public ICommand ChonBoLocCommand { get; }
@@ -266,8 +283,8 @@ namespace QUAN_LY_THUE_XE.ViewModels
         public ICommand MoChiTietCommand { get; }
         public ICommand DongChiTietCommand { get; }
         public ICommand SuaTuChiTietCommand { get; }
-        public ICommand XoaXeCommand { get; }
-        public ICommand ChuyenTrangThaiNgungCommand { get; }
+        public ICommand ChuyenBaoDuongCommand { get; }
+        public ICommand XoaMemXeCommand { get; }
 
         public VehicleViewModel()
         {
@@ -277,16 +294,20 @@ namespace QUAN_LY_THUE_XE.ViewModels
             {
                 if (p is string filter)
                 {
-                    if (filter == "Tất cả") _locTrangThaiKpi = string.Empty;
-                    OnPropertyChanged(nameof(LocTrangThaiKpi));
+                    if (filter == "Tất cả")
+                    {
+                        _trangThaiLocDangChon = "Tất cả trạng thái";
+                        OnPropertyChanged(nameof(TrangThaiLocDangChon));
+                    }
                     BoLocDangChon = filter;
                 }
             });
 
             ChonLocKpiCommand = new RelayCommand(p =>
             {
-                string trangThai = p?.ToString() ?? string.Empty;
-                LocTrangThaiKpi = LocTrangThaiKpi == trangThai ? string.Empty : trangThai;
+                string trangThai = p?.ToString() ?? "Tất cả trạng thái";
+                if (string.IsNullOrEmpty(trangThai)) trangThai = "Tất cả trạng thái";
+                TrangThaiLocDangChon = TrangThaiLocDangChon == trangThai ? "Tất cả trạng thái" : trangThai;
             });
 
             LamMoiCommand = new RelayCommand(_ =>
@@ -331,8 +352,8 @@ namespace QUAN_LY_THUE_XE.ViewModels
                 }
             });
 
-            XoaXeCommand = new RelayCommand(p => ThucHienXoaXe(p as Xe));
-            ChuyenTrangThaiNgungCommand = new RelayCommand(_ => ThucHienChuyenNgungHoatDong());
+            ChuyenBaoDuongCommand = new RelayCommand(p => ThucHienChuyenBaoDuong(p as Xe));
+            XoaMemXeCommand = new RelayCommand(p => ThucHienXoaMemXe(p as Xe));
 
             LoadDuLieu();
         }
@@ -369,20 +390,20 @@ namespace QUAN_LY_THUE_XE.ViewModels
                     (!string.IsNullOrEmpty(x.HangXe) && x.HangXe.Contains(kw, StringComparison.OrdinalIgnoreCase)));
             }
 
-            // 2. Lọc theo thẻ KPI nếu đang bật (Sẵn sàng / Đang thuê)
-            if (!string.IsNullOrEmpty(LocTrangThaiKpi))
+            // 2. Lọc theo trạng thái xe (Sẵn sàng / Đang thuê / Đang bảo dưỡng / Ngưng hoạt động)
+            if (!string.IsNullOrEmpty(TrangThaiLocDangChon) && TrangThaiLocDangChon != "Tất cả trạng thái")
             {
-                query = LocTrangThaiKpi == "Đang thuê"
+                query = TrangThaiLocDangChon == "Đang thuê"
                     ? query.Where(x => x.TrangThai == "Đang thuê" || x.TrangThai == "Đang cho thuê")
-                    : query.Where(x => x.TrangThai == LocTrangThaiKpi);
+                    : query.Where(x => x.TrangThai == TrangThaiLocDangChon);
             }
 
-            // 3. Lọc theo 5 nút viên thuốc chuẩn Figma
+            // 3. Lọc theo phân khúc (Sedan / SUV / 7 chỗ / Xe điện)
             query = BoLocDangChon switch
             {
-                "4 chỗ" => query.Where(x => x.SoChoNgoi <= 5),
-                "7 chỗ" => query.Where(x => x.SoChoNgoi >= 7),
+                "Sedan" => query.Where(x => x.SoChoNgoi <= 5 && !LaXeSuv(x)),
                 "SUV" => query.Where(LaXeSuv),
+                "7 chỗ" => query.Where(x => x.SoChoNgoi >= 7),
                 "Xe điện" => query.Where(LaXeDien),
                 _ => query
             };
@@ -540,38 +561,12 @@ namespace QUAN_LY_THUE_XE.ViewModels
             LoadDuLieu();
         }
 
-        private void ThucHienXoaXe(Xe? xeTruyenVao)
+        private void ThucHienChuyenBaoDuong(Xe? xeTruyenVao)
         {
-            var xeCanXoa = xeTruyenVao ?? XeChiTiet ?? _tatCaXe.FirstOrDefault(x => x.MaXe == _formMaXe);
-            if (xeCanXoa == null) return;
+            var xe = xeTruyenVao ?? XeChiTiet ?? _tatCaXe.FirstOrDefault(x => x.MaXe == _formMaXe);
+            if (xe == null) return;
 
-            var xacNhan = MessageBox.Show(
-                $"Bạn có chắc chắn muốn xóa xe {xeCanXoa.TenXe} ({xeCanXoa.BienSo}) khỏi hệ thống?",
-                "Xác nhận xóa xe",
-                MessageBoxButton.YesNo,
-                MessageBoxImage.Warning);
-
-            if (xacNhan != MessageBoxResult.Yes) return;
-
-            var (thanhCong, thongBao) = _vehicleService.XoaXe(xeCanXoa.MaXe);
-            if (!thanhCong)
-            {
-                MessageBox.Show(thongBao, "Không thể xóa xe", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            DangMoForm = false;
-            DangMoChiTiet = false;
-            ThongBaoHeThong = thongBao;
-            LoadDuLieu();
-        }
-
-        private void ThucHienChuyenNgungHoatDong()
-        {
-            if (XeChiTiet == null) return;
-
-            string trangThaiMoi = XeChiTiet.TrangThai == "Ngưng hoạt động" ? "Sẵn sàng" : "Ngưng hoạt động";
-            var (thanhCong, thongBao) = _vehicleService.ChuyenTrangThaiNhanh(XeChiTiet.MaXe, trangThaiMoi);
+            var (thanhCong, thongBao) = _vehicleService.ChuyenTrangThaiBaoDuong(xe.MaXe);
             if (!thanhCong)
             {
                 MessageBox.Show(thongBao, "Cảnh báo nghiệp vụ", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -579,6 +574,37 @@ namespace QUAN_LY_THUE_XE.ViewModels
             }
 
             DangMoChiTiet = false;
+            DangMoForm = false;
+            ThongBaoHeThong = thongBao;
+            LoadDuLieu();
+        }
+
+        private void ThucHienXoaMemXe(Xe? xeTruyenVao)
+        {
+            var xe = xeTruyenVao ?? XeChiTiet ?? _tatCaXe.FirstOrDefault(x => x.MaXe == _formMaXe);
+            if (xe == null) return;
+
+            string hanhDong = xe.TrangThai == "Ngưng hoạt động"
+                ? $"khôi phục xe {xe.TenXe} ({xe.BienSo}) về trạng thái 'Sẵn sàng'"
+                : $"xóa mềm xe {xe.TenXe} ({xe.BienSo}) — chuyển sang 'Ngưng hoạt động'";
+
+            var xacNhan = MessageBox.Show(
+                $"Bạn có chắc chắn muốn {hanhDong}?",
+                "Xác nhận thao tác",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Question);
+
+            if (xacNhan != MessageBoxResult.Yes) return;
+
+            var (thanhCong, thongBao) = _vehicleService.XoaMemXe(xe.MaXe);
+            if (!thanhCong)
+            {
+                MessageBox.Show(thongBao, "Không thể thực hiện", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            DangMoChiTiet = false;
+            DangMoForm = false;
             ThongBaoHeThong = thongBao;
             LoadDuLieu();
         }
