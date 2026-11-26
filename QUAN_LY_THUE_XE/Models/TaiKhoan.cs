@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace QUAN_LY_THUE_XE.Models
 {
+    // Dữ liệu tài khoản đăng nhập và vai trò người dùng trong hệ thống.
     public class TaiKhoan
     {
         [Key]

@@ -1,38 +1,12 @@
 ﻿<UserControl x:Class="QUAN_LY_THUE_XE.Views.HandoverView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             mc:Ignorable="d" d:DesignHeight="700" d:DesignWidth="1100" FontFamily="Segoe UI">
-    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-        <Grid Background="#F3F6F4" Margin="26,22,26,22">
-            <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
-            <StackPanel Grid.Row="0" Margin="0,0,0,18"><TextBlock Text="Bàn giao xe" FontSize="23" FontWeight="Bold" Foreground="#20362D"/><TextBlock Text="Ghi nhận tình trạng phương tiện khi giao và nhận" FontSize="12" Foreground="#839189" Margin="0,5,0,0"/></StackPanel>
-            <Border Grid.Row="1" Background="White" CornerRadius="9" Padding="16" Margin="0,0,0,14" BorderBrush="#E8EDE9" BorderThickness="1">
-                <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><StackPanel><TextBlock Text="Hợp đồng đang xử lý" Foreground="#263A31" FontSize="12" FontWeight="SemiBold"/><TextBlock Text="Chọn hợp đồng để tải thông tin giao nhận" Foreground="#89968F" FontSize="10" Margin="0,4,0,0"/></StackPanel><TextBox Grid.Column="1" IsEnabled="False" Text="Chọn mã hợp đồng" Padding="9" Width="220" Background="#FAFBFA" BorderBrush="#E1E7E3"/></Grid>
-            </Border>
-            <Grid Grid.Row="2">
-                <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
-                <Border Grid.Column="0" Background="White" CornerRadius="9" Padding="18" Margin="0,0,8,0" BorderBrush="#E8EDE9" BorderThickness="1">
-                    <StackPanel>
-                        <TextBlock Text="Thông tin bàn giao" Foreground="#263A31" FontSize="13" FontWeight="SemiBold"/>
-                        <TextBlock Text="Thông tin xe và khách hàng" Foreground="#89968F" FontSize="10" Margin="0,4,0,14"/>
-                        <TextBlock Text="Số km hiện tại" Foreground="#6D7A72" FontSize="10"/><TextBox IsEnabled="False" Margin="0,5,0,12" Padding="9" Background="#FAFBFA" BorderBrush="#E1E7E3"/>
-                        <TextBlock Text="Mức nhiên liệu" Foreground="#6D7A72" FontSize="10"/><TextBox IsEnabled="False" Margin="0,5,0,12" Padding="9" Background="#FAFBFA" BorderBrush="#E1E7E3"/>
-                        <TextBlock Text="Tình trạng ngoại thất" Foreground="#6D7A72" FontSize="10"/><TextBox IsEnabled="False" AcceptsReturn="True" Height="78" TextWrapping="Wrap" Margin="0,5,0,0" Padding="9" Background="#FAFBFA" BorderBrush="#E1E7E3"/>
-                    </StackPanel>
-                </Border>
-                <Border Grid.Column="1" Background="White" CornerRadius="9" Padding="18" Margin="8,0,0,0" BorderBrush="#E8EDE9" BorderThickness="1">
-                    <StackPanel>
-                        <TextBlock Text="Xác nhận nhận xe" Foreground="#263A31" FontSize="13" FontWeight="SemiBold"/>
-                        <TextBlock Text="Cập nhật tình trạng khi khách hoàn trả phương tiện" Foreground="#89968F" FontSize="10" Margin="0,4,0,14"/>
-                        <TextBlock Text="Số km khi nhận lại" Foreground="#6D7A72" FontSize="10"/><TextBox IsEnabled="False" Margin="0,5,0,12" Padding="9" Background="#FAFBFA" BorderBrush="#E1E7E3"/>
-                        <TextBlock Text="Mức nhiên liệu khi nhận lại" Foreground="#6D7A72" FontSize="10"/><TextBox IsEnabled="False" Margin="0,5,0,12" Padding="9" Background="#FAFBFA" BorderBrush="#E1E7E3"/>
-                        <TextBlock Text="Ghi chú tình trạng xe" Foreground="#6D7A72" FontSize="10"/><TextBox IsEnabled="False" AcceptsReturn="True" Height="78" TextWrapping="Wrap" Margin="0,5,0,0" Padding="9" Background="#FAFBFA" BorderBrush="#E1E7E3"/>
-                        <Button Content="Xác nhận giao nhận" IsEnabled="False" ToolTip="Chức năng giao nhận chưa được kết nối" Background="#1E604A" Foreground="White" BorderThickness="0" Padding="12,9" Margin="0,16,0,0" FontWeight="SemiBold"/>
-                    </StackPanel>
-                </Border>
-            </Grid>
-        </Grid>
-    </ScrollViewer>
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:QUAN_LY_THUE_XE.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+            
+    </Grid>
 </UserControl>

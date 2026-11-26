@@ -5,11 +5,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace QUAN_LY_THUE_XE.Models
 {
+    // Hợp đồng liên kết một khách hàng với một xe trong khoảng thời gian thuê.
     public class DonThue
     {
         [Key]
         public int MaDon { get; set; }
 
+        // Hai khóa ngoại xác định khách thuê và phương tiện được thuê.
         public int MaKH { get; set; }
         [ForeignKey(nameof(MaKH))]
         public virtual KhachHang KhachHang { get; set; }

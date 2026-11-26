@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace QUAN_LY_THUE_XE.Models
 {
+    // Danh mục khoản phụ phí có thể phát sinh trong quá trình thuê xe.
     public class PhuPhi
     {
         [Key]

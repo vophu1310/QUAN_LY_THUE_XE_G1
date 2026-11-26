@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace QUAN_LY_THUE_XE.Models
 {
+    // Thông tin phương tiện, giá thuê và trạng thái vận hành.
     public class Xe
     {
         [Key]

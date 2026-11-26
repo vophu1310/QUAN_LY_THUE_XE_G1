@@ -1,13 +1,15 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations; // <-- Bắt buộc phải có dòng này
+using System.ComponentModel.DataAnnotations;
 
 namespace QUAN_LY_THUE_XE.Models
 {
+    // Lưu tình trạng xe và chỉ số vận hành tại thời điểm giao hoặc nhận xe.
     public class BienBanGiaoNhan
     {
-        [Key] // <-- Báo cho EF Core biết đây là Khóa chính
-        public int MaBB { get; set; } // (hoặc MaBienBan tùy theo tên bạn đã đặt)
+        [Key]
+        public int MaBB { get; set; }
 
+        // Khóa ngoại về hợp đồng thuê liên quan.
         public int MaDon { get; set; }
         public string LoaiBienBan { get; set; } // "Giao xe" hoặc "Nhận xe"
         public DateTime NgayLap { get; set; } = DateTime.Now;

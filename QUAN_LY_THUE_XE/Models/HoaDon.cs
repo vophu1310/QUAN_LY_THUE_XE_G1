@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace QUAN_LY_THUE_XE.Models
 {
+    // Hóa đơn của một hợp đồng; tổng thanh toán phản ánh tiền thuê, phụ phí và tiền cọc đã trừ.
     public class HoaDon
     {
         [Key]

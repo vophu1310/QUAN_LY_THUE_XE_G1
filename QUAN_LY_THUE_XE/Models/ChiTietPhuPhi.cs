@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace QUAN_LY_THUE_XE.Models
 {
+    // Bảng liên kết giữa đơn thuê và loại phụ phí, lưu số lượng cùng thành tiền.
     public class ChiTietPhuPhi
     {
         [Key]

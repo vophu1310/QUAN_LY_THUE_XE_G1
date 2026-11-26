@@ -2,6 +2,7 @@
 
 namespace QUAN_LY_THUE_XE.Models
 {
+    // Danh mục phân loại phương tiện, được xe tham chiếu qua MaLoaiXe.
     public class LoaiXe
     {
         [Key]
