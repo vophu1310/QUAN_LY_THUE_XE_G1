@@ -3,9 +3,11 @@ using QUAN_LY_THUE_XE.Models;
 
 namespace QUAN_LY_THUE_XE.Data
 {
+    // Context EF Core dùng LocalDB; CRUD khách hàng hiện gọi ADO.NET qua KHProvider tới DSKHACHHANG.
+    // Hai luồng dùng cùng model KhachHang nhưng cấu hình kết nối/bảng khác nhau.
     public class AppDbContext : DbContext
     {
-        // Khai báo các bảng trong CSDL
+        // Các DbSet ánh xạ những thực thể nghiệp vụ thành bảng EF Core.
         public DbSet<TaiKhoan> TaiKhoans { get; set; }
         public DbSet<KhachHang> KhachHangs { get; set; }
         public DbSet<Xe> Xes { get; set; }
@@ -13,10 +15,6 @@ namespace QUAN_LY_THUE_XE.Data
         public DbSet<HoaDon> HoaDons { get; set; }
         public DbSet<PhuPhi> PhuPhis { get; set; }
         public DbSet<BienBanGiaoNhan> BienBanGiaoNhans { get; set; }
-
-        // Nếu bạn đã tạo thêm 2 Model này thì bỏ comment:
-        // public DbSet<LoaiXe> LoaiXes { get; set; }
-        // public DbSet<ChiTietPhuPhi> ChiTietPhuPhis { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

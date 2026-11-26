@@ -4,6 +4,7 @@ using System.Data;
 
 namespace QUAN_LY_THUE_XE.Models
 {
+    // Thực thể khách hàng dùng chung cho EF Core và luồng ADO.NET của bảng DSKHACHHANG.
     public class KhachHang
     {
         // Lấy danh sách khách trực tiếp từ bảng DSKHACHHANG bằng KHProvider (ADO.NET).
@@ -26,6 +27,7 @@ namespace QUAN_LY_THUE_XE.Models
             return new KHProvider().Select(CommandType.Text, sql, parameter);
         }
 
+        // Tạo mã ứng viên kế tiếp dựa trên mã lớn nhất đang có trong bảng.
         public int LayMaKHKeTiep()
         {
             const string sql = "SELECT ISNULL(MAX(MaKH), 0) + 1 FROM DSKHACHHANG";
@@ -33,6 +35,7 @@ namespace QUAN_LY_THUE_XE.Models
             return Convert.ToInt32(value);
         }
 
+        // Thêm một hồ sơ khách vào SQL Server, truyền mọi giá trị qua tham số có kiểu.
         public int ThemKhachHang(KhachHang kh)
         {
             const string sql = "INSERT INTO DSKHACHHANG (MaKH, CCCD, HoTen, SODT, GPLX) VALUES (@MaKH, @CCCD, @HoTen, @SODT, @GPLX)";
@@ -45,6 +48,7 @@ namespace QUAN_LY_THUE_XE.Models
             );
         }
 
+        // Cập nhật các trường hồ sơ theo MaKH; cập nhật IsBlacklisted chỉ khi schema có cột đó.
         public int CapNhatKhachHang(KhachHang kh)
         {
             const string sql = "UPDATE DSKHACHHANG SET CCCD = @CCCD, HoTen = @HoTen, SODT = @SODT, GPLX = @GPLX WHERE MaKH = @MaKH; IF COL_LENGTH(N'dbo.DSKHACHHANG', N'IsBlacklisted') IS NOT NULL UPDATE DSKHACHHANG SET IsBlacklisted = @IsBlacklisted WHERE MaKH = @MaKH";
@@ -58,6 +62,7 @@ namespace QUAN_LY_THUE_XE.Models
             );
         }
 
+        // Xóa hồ sơ theo khóa chính và trả về số hàng SQL Server đã xóa.
         public int XoaKhachHang(int maKH)
         {
             const string sql = "DELETE FROM DSKHACHHANG WHERE MaKH = @MaKH";

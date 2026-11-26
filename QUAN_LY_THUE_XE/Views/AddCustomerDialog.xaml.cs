@@ -22,6 +22,7 @@ namespace QUAN_LY_THUE_XE.Views
             tbMaKH.Text = $"KH{khachHangMoi.MaKH:D3}";
         }
 
+        // Kiểm tra dữ liệu form; nếu hợp lệ, gán vào model và trả kết quả cho ViewModel để lưu.
         private void BtnLuu_Click(object sender, RoutedEventArgs e)
         {
             // Validation: các trường bắt buộc.
@@ -72,6 +73,7 @@ namespace QUAN_LY_THUE_XE.Views
             Close();
         }
 
+        // Đóng dialog với kết quả hủy để ViewModel không ghi dữ liệu.
         private void BtnHuy_Click(object sender, RoutedEventArgs e)
         {
             DialogResult = false;

@@ -31,6 +31,7 @@ namespace QUAN_LY_THUE_XE.Models
             return table;
         }
 
+        // Dùng cho INSERT/UPDATE/DELETE; bind tham số, thực thi và trả số hàng bị ảnh hưởng.
         public int ExecuteNonQuery(CommandType commandType, string sql, params SqlParameter[] parameters)
         {
             using var connection = new SqlConnection(ConnectionString);
@@ -44,6 +45,7 @@ namespace QUAN_LY_THUE_XE.Models
             return command.ExecuteNonQuery();
         }
 
+        // Dùng cho truy vấn trả về một giá trị đơn, ví dụ MAX(MaKH) + 1; caller chuyển kết quả về kiểu cần dùng.
         public object? ExecuteScalar(CommandType commandType, string sql, params SqlParameter[] parameters)
         {
             using var connection = new SqlConnection(ConnectionString);

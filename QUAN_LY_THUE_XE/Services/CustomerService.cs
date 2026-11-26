@@ -47,16 +47,10 @@ namespace QUAN_LY_THUE_XE.Services
             return new KhachHang().LayMaKHKeTiep();
         }
 
-        // Đếm tổng số khách hàng (cho badge hiển thị trên giao diện).
-        public int DemTongKhachHang()
-        {
-            var dt = new KhachHang().LayTatCaKhachHang();
-            return dt.Rows.Count;
-        }
-
         // Chuyển đổi DataTable (kết quả SQL) thành List<KhachHang> để ViewModel có thể bind.
         private static List<KhachHang> ChuyenDataTableSangList(DataTable dt)
         {
+            // Tạo model cho từng dòng SQL để ViewModel không phụ thuộc trực tiếp vào DataTable.
             return dt.AsEnumerable()
                 .Select(row => new KhachHang
                 {

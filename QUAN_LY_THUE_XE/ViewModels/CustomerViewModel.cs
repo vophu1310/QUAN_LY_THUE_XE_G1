@@ -83,6 +83,7 @@ namespace QUAN_LY_THUE_XE.ViewModels
             set => SetProperty(ref _soKhachCanhBao, value);
         }
 
+        // 0 = tất cả, 1 = an toàn, 2 = danh sách đen; thứ tự tương ứng ComboBox trong CustomerView.xaml.
         private int _statusFilterIndex;
         public int StatusFilterIndex
         {
@@ -188,6 +189,7 @@ namespace QUAN_LY_THUE_XE.ViewModels
         {
             try
             {
+                // Lấy danh sách qua Service; truy vấn thực tế nằm ở Model và KHProvider.
                 _tatCaKhachHang = string.IsNullOrWhiteSpace(_searchText)
                     ? _service.LayTatCaKhachHang()
                     : _service.TimKiemKhachHang(_searchText);
@@ -216,10 +218,11 @@ namespace QUAN_LY_THUE_XE.ViewModels
         }
 
         /// <summary>
-        /// Lấy các khách hàng thuộc trang hiện tại và cập nhật DataGrid.
+        /// Áp dụng bộ lọc trạng thái đang chọn lên danh sách đã tải từ service.
         /// </summary>
         private List<KhachHang> LayDanhSachTheoBoLoc()
         {
+            // Mã trạng thái được đồng bộ với thứ tự ComboBox: tất cả, an toàn, cảnh báo.
             return _statusFilterIndex switch
             {
                 1 => _tatCaKhachHang.Where(customer => !customer.IsBlacklisted).ToList(),
@@ -228,12 +231,14 @@ namespace QUAN_LY_THUE_XE.ViewModels
             };
         }
 
+        // Tính tổng trang dựa trên tập dữ liệu sau khi áp dụng bộ lọc trạng thái.
         private void CapNhatTongSoTrang()
         {
             int filteredCount = LayDanhSachTheoBoLoc().Count;
             TongSoTrang = Math.Max(1, (int)Math.Ceiling((double)filteredCount / SoKhachMoiTrang));
         }
 
+        // Chỉ đưa tối đa SoKhachMoiTrang bản ghi của trang hiện tại lên DataGrid.
         private void HienThiTrang()
         {
             var trang = LayDanhSachTheoBoLoc()
@@ -291,6 +296,7 @@ namespace QUAN_LY_THUE_XE.ViewModels
         /// </summary>
         private void XoaKhachHang()
         {
+            // Không gửi lệnh SQL nếu chưa có khách được chọn hoặc người dùng hủy xác nhận.
             if (SelectedCustomer is null) return;
 
             var result = MessageBox.Show(

@@ -137,17 +137,27 @@
                       IsReadOnly="True"
                       SelectionMode="Single"
                       CanUserAddRows="False"
+                      HeadersVisibility="Column"
                       CanUserReorderColumns="False"
                       GridLinesVisibility="Horizontal"
                       HorizontalGridLinesBrush="#EEF1EF"
                       BorderThickness="0"
-                      Background="White"
-                      RowHeight="44"
-                      ColumnHeaderHeight="38"
-                      FontSize="11"
-                      Margin="8">
+                             Background="White"
+                             RowHeight="44"
+                             ColumnHeaderHeight="38"
+                             FontSize="11"
+                             VerticalContentAlignment="Center"
+                             Margin="8">
 
-                <!-- Style header cột -->
+                      <DataGrid.Resources>
+                          <!-- Căn TextBlock trong các cột dữ liệu vào giữa chiều cao của từng hàng. -->
+                          <Style x:Key="CustomerCellTextStyle" TargetType="TextBlock">
+                              <Setter Property="VerticalAlignment" Value="Center"/>
+                              <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+                          </Style>
+                      </DataGrid.Resources>
+
+                      <!-- Style header cột -->
                 <DataGrid.ColumnHeaderStyle>
                     <Style TargetType="DataGridColumnHeader">
                         <Setter Property="Background" Value="#F0F5F2"/>
@@ -155,6 +165,7 @@
                         <Setter Property="FontWeight" Value="SemiBold"/>
                         <Setter Property="FontSize" Value="10"/>
                         <Setter Property="Padding" Value="12,9"/>
+                        <Setter Property="VerticalContentAlignment" Value="Center"/>
                         <Setter Property="BorderBrush" Value="#E4EAE6"/>
                         <Setter Property="BorderThickness" Value="0,0,0,1"/>
                     </Style>
@@ -182,7 +193,9 @@
                     <Style TargetType="DataGridCell">
                         <Setter Property="Padding" Value="12,0"/>
                         <Setter Property="BorderThickness" Value="0"/>
-                        <Setter Property="VerticalAlignment" Value="Center"/>
+                        <Setter Property="VerticalAlignment" Value="Stretch"/>
+                        <Setter Property="VerticalContentAlignment" Value="Center"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                         <Style.Triggers>
                             <Trigger Property="IsSelected" Value="True">
                                 <Setter Property="Background" Value="Transparent"/>
@@ -195,19 +208,29 @@
                 <DataGrid.Columns>
                     <!-- Giữ các cột dữ liệu khách hàng hiện có, không hiển thị thông tin giả chưa lưu trong DB. -->
                     <DataGridTextColumn Header="Mã KH" Width="85"
-                                        Binding="{Binding MaKH, StringFormat='KH{0:D3}'}"/>
+                                        Binding="{Binding MaKH, StringFormat='KH{0:D3}'}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock" BasedOn="{StaticResource CustomerCellTextStyle}">
+                                <Setter Property="Margin" Value="8,0,0,0"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
                     <DataGridTextColumn Header="Họ và tên" Width="1.5*"
-                                        Binding="{Binding HoTen}"/>
+                                        Binding="{Binding HoTen}"
+                                        ElementStyle="{StaticResource CustomerCellTextStyle}"/>
                     <DataGridTextColumn Header="Số điện thoại" Width="*"
-                                        Binding="{Binding SODT}"/>
+                                        Binding="{Binding SODT}"
+                                        ElementStyle="{StaticResource CustomerCellTextStyle}"/>
                     <DataGridTextColumn Header="CCCD" Width="*"
-                                        Binding="{Binding CCCD}"/>
+                                        Binding="{Binding CCCD}"
+                                        ElementStyle="{StaticResource CustomerCellTextStyle}"/>
                     <DataGridTextColumn Header="GPLX" Width="*"
-                                        Binding="{Binding GPLX}"/>
+                                        Binding="{Binding GPLX}"
+                                        ElementStyle="{StaticResource CustomerCellTextStyle}"/>
                     <DataGridTemplateColumn Header="Trạng thái" Width="*">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Border x:Name="StatusPill" Background="#EAF3EE" CornerRadius="10" Padding="8,4" HorizontalAlignment="Left">
+                                <Border x:Name="StatusPill" Background="#EAF3EE" CornerRadius="10" Padding="8,4" HorizontalAlignment="Left" VerticalAlignment="Center">
                                     <StackPanel Orientation="Horizontal">
                                         <Ellipse x:Name="StatusDot" Width="5" Height="5" Fill="#2D7359" VerticalAlignment="Center" Margin="0,0,5,0"/>
                                         <TextBlock x:Name="StatusLabel" Text="An toàn" Foreground="#27664F" FontSize="9" FontWeight="SemiBold"/>
