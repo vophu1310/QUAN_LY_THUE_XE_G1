@@ -16,7 +16,7 @@
         <views:StatusPillForegroundConverter x:Key="StatusFgConv"/>
         <views:StringNotEmptyToVisibilityConverter x:Key="StrNotEmptyToVis"/>
 
-        <!-- Nút chính màu xanh rêu chuẩn Figma -->
+        <!-- Nút chính xanh rêu chuẩn Figma -->
         <Style x:Key="PrimaryButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="#1E5641"/>
             <Setter Property="Foreground" Value="White"/>
@@ -101,7 +101,36 @@
             </Setter>
         </Style>
 
-        <!-- Nút cảnh báo xóa màu đỏ nhạt -->
+        <!-- Nút Bảo dưỡng màu cam nhạt -->
+        <Style x:Key="WarningSoftButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#FFF7ED"/>
+            <Setter Property="Foreground" Value="#C2410C"/>
+            <Setter Property="BorderBrush" Value="#FED7AA"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="12,8"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="8" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#FFEDD5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Nút Xóa mềm (Ngưng hoạt động) màu đỏ nhạt -->
         <Style x:Key="DangerSoftButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="#FEF2F2"/>
             <Setter Property="Foreground" Value="#DC2626"/>
@@ -109,7 +138,7 @@
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="FontSize" Value="12"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Padding" Value="14,8"/>
+            <Setter Property="Padding" Value="12,8"/>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Template">
                 <Setter.Value>
@@ -130,7 +159,7 @@
             </Setter>
         </Style>
 
-        <!-- Nút lọc dạng viên thuốc (Filter Pill chuẩn Figma) -->
+        <!-- Nút lọc dạng viên thuốc (Filter Pill) -->
         <Style x:Key="FilterPillStyle" TargetType="Button">
             <Setter Property="Background" Value="White"/>
             <Setter Property="Foreground" Value="#475569"/>
@@ -138,8 +167,8 @@
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="FontSize" Value="12"/>
             <Setter Property="FontWeight" Value="Medium"/>
-            <Setter Property="Padding" Value="16,7"/>
-            <Setter Property="Margin" Value="0,0,8,0"/>
+            <Setter Property="Padding" Value="14,7"/>
+            <Setter Property="Margin" Value="0,0,7,0"/>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Template">
                 <Setter.Value>
@@ -237,14 +266,13 @@
                            Foreground="#132E24" VerticalAlignment="Center"/>
 
                 <StackPanel Grid.Column="1" Orientation="Horizontal">
-                    <!-- KPI 1: Xe tổng cộng -->
-                    <Button Command="{Binding ChonLocKpiCommand}" CommandParameter=""
+                    <Button Command="{Binding ChonLocKpiCommand}" CommandParameter="Tất cả trạng thái"
                             Background="White" BorderBrush="#E2E8F0" Margin="0,0,10,0"
                             ToolTip="Hiển thị toàn bộ xe">
                         <Button.Style>
                             <Style TargetType="Button" BasedOn="{StaticResource KpiCardButtonStyle}">
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding LocTrangThaiKpi}" Value="">
+                                    <DataTrigger Binding="{Binding TrangThaiLocDangChon}" Value="Tất cả trạng thái">
                                         <Setter Property="BorderBrush" Value="#94A3B8"/>
                                     </DataTrigger>
                                 </Style.Triggers>
@@ -256,14 +284,13 @@
                         </StackPanel>
                     </Button>
 
-                    <!-- KPI 2: Sẵn sàng -->
                     <Button Command="{Binding ChonLocKpiCommand}" CommandParameter="Sẵn sàng"
                             Background="#EDF7F1" BorderBrush="#D1EBD9" Margin="0,0,10,0"
                             ToolTip="Bấm để lọc nhanh xe Sẵn sàng">
                         <Button.Style>
                             <Style TargetType="Button" BasedOn="{StaticResource KpiCardButtonStyle}">
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding LocTrangThaiKpi}" Value="Sẵn sàng">
+                                    <DataTrigger Binding="{Binding TrangThaiLocDangChon}" Value="Sẵn sàng">
                                         <Setter Property="BorderBrush" Value="#1E5641"/>
                                         <Setter Property="BorderThickness" Value="1.5"/>
                                     </DataTrigger>
@@ -276,14 +303,13 @@
                         </StackPanel>
                     </Button>
 
-                    <!-- KPI 3: Đang thuê -->
                     <Button Command="{Binding ChonLocKpiCommand}" CommandParameter="Đang thuê"
                             Background="#FFF6EB" BorderBrush="#FDE4C8"
                             ToolTip="Bấm để lọc nhanh xe Đang thuê">
                         <Button.Style>
                             <Style TargetType="Button" BasedOn="{StaticResource KpiCardButtonStyle}">
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding LocTrangThaiKpi}" Value="Đang thuê">
+                                    <DataTrigger Binding="{Binding TrangThaiLocDangChon}" Value="Đang thuê">
                                         <Setter Property="BorderBrush" Value="#C2410C"/>
                                         <Setter Property="BorderThickness" Value="1.5"/>
                                     </DataTrigger>
@@ -298,10 +324,11 @@
                 </StackPanel>
             </Grid>
 
-            <!-- HÀNG 2: THANH TÌM KIẾM, 5 NÚT LỌC CHUẨN FIGMA & NÚT THÊM XE -->
+            <!-- HÀNG 2: TÌM KIẾM, BỘ LỌC PHÂN KHÚC + TRẠNG THÁI & NÚT THÊM XE -->
             <Grid Grid.Row="1" Margin="0,0,0,14">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="260"/>
+                    <ColumnDefinition Width="220"/>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
@@ -318,9 +345,9 @@
                                                  Foreground="#94A3B8" VerticalAlignment="Center" Margin="0,0,8,0"/>
                         <TextBox Grid.Column="1" x:Name="SearchTextBox"
                                  Text="{Binding TuKhoaTimKiem, UpdateSourceTrigger=PropertyChanged}"
-                                 BorderThickness="0" Background="Transparent" FontSize="13"
+                                 BorderThickness="0" Background="Transparent" FontSize="12.5"
                                  Foreground="#0F172A" VerticalContentAlignment="Center"/>
-                        <TextBlock Grid.Column="1" Text="Tìm bằng biển số, tên xe..."
+                        <TextBlock Grid.Column="1" Text="Tìm biển số, tên xe..."
                                    Foreground="#94A3B8" FontSize="12" VerticalAlignment="Center"
                                    IsHitTestVisible="False">
                             <TextBlock.Style>
@@ -337,8 +364,17 @@
                     </Grid>
                 </Border>
 
-                <!-- 5 nút lọc viên thuốc đúng 100% nhãn Figma -->
-                <WrapPanel Grid.Column="1" VerticalAlignment="Center" Margin="14,0,10,0">
+                <!-- Bộ lọc Trạng thái xe (Sẵn sàng / Đang thuê / Đang bảo dưỡng / Ngưng hoạt động) -->
+                <ComboBox Grid.Column="1"
+                          ItemsSource="{Binding DanhSachLocTrangThai}"
+                          SelectedItem="{Binding TrangThaiLocDangChon}"
+                          Width="148" Height="38" Margin="10,0,0,0"
+                          FontSize="12" Foreground="#334155" Background="White"
+                          BorderBrush="#E2E8F0" Padding="10,0"
+                          VerticalContentAlignment="Center"/>
+
+                <!-- Dãy nút lọc phân khúc (Tất cả / Sedan / SUV / 7 chỗ / Xe điện) -->
+                <WrapPanel Grid.Column="2" VerticalAlignment="Center" Margin="12,0,8,0">
                     <Button Content="Tất cả" Command="{Binding ChonBoLocCommand}" CommandParameter="Tất cả">
                         <Button.Style>
                             <Style TargetType="Button" BasedOn="{StaticResource FilterPillStyle}">
@@ -353,25 +389,11 @@
                         </Button.Style>
                     </Button>
 
-                    <Button Content="4 chỗ" Command="{Binding ChonBoLocCommand}" CommandParameter="4 chỗ">
+                    <Button Content="Sedan" Command="{Binding ChonBoLocCommand}" CommandParameter="Sedan">
                         <Button.Style>
                             <Style TargetType="Button" BasedOn="{StaticResource FilterPillStyle}">
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding BoLocDangChon}" Value="4 chỗ">
-                                        <Setter Property="Background" Value="#132E24"/>
-                                        <Setter Property="Foreground" Value="White"/>
-                                        <Setter Property="BorderBrush" Value="#132E24"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Button.Style>
-                    </Button>
-
-                    <Button Content="7 chỗ" Command="{Binding ChonBoLocCommand}" CommandParameter="7 chỗ">
-                        <Button.Style>
-                            <Style TargetType="Button" BasedOn="{StaticResource FilterPillStyle}">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding BoLocDangChon}" Value="7 chỗ">
+                                    <DataTrigger Binding="{Binding BoLocDangChon}" Value="Sedan">
                                         <Setter Property="Background" Value="#132E24"/>
                                         <Setter Property="Foreground" Value="White"/>
                                         <Setter Property="BorderBrush" Value="#132E24"/>
@@ -386,6 +408,20 @@
                             <Style TargetType="Button" BasedOn="{StaticResource FilterPillStyle}">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding BoLocDangChon}" Value="SUV">
+                                        <Setter Property="Background" Value="#132E24"/>
+                                        <Setter Property="Foreground" Value="White"/>
+                                        <Setter Property="BorderBrush" Value="#132E24"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+
+                    <Button Content="7 chỗ" Command="{Binding ChonBoLocCommand}" CommandParameter="7 chỗ">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource FilterPillStyle}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding BoLocDangChon}" Value="7 chỗ">
                                         <Setter Property="Background" Value="#132E24"/>
                                         <Setter Property="Foreground" Value="White"/>
                                         <Setter Property="BorderBrush" Value="#132E24"/>
@@ -411,7 +447,7 @@
                 </WrapPanel>
 
                 <!-- Nút Làm mới & Thêm xe -->
-                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">
                     <Button Style="{StaticResource OutlineButtonStyle}" Command="{Binding LamMoiCommand}"
                             ToolTip="Đồng bộ lại dữ liệu từ SQL Server" Height="38" Width="38" Padding="0" Margin="0,0,8,0">
                         <materialDesign:PackIcon Kind="Refresh" Width="18" Height="18" Foreground="#475569"/>
@@ -426,7 +462,7 @@
                 </StackPanel>
             </Grid>
 
-            <!-- HÀNG 3: THÔNG TIN HIỂN THỊ & PHÂN TRANG CHUẨN FIGMA -->
+            <!-- HÀNG 3: THÔNG TIN HIỂN THỊ & PHÂN TRANG -->
             <Grid Grid.Row="2" Margin="0,0,0,12">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -445,7 +481,6 @@
                     </Border>
                 </StackPanel>
 
-                <!-- Phân trang (< Trước | 1 | >) đúng vị trí Figma -->
                 <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                     <Button Style="{StaticResource OutlineButtonStyle}" Command="{Binding TrangTruocCommand}" Padding="10,5" Margin="0,0,6,0">
                         <StackPanel Orientation="Horizontal">
@@ -492,7 +527,6 @@
                                         <!-- ẢNH XE + NHÃN TRẠNG THÁI NỔI -->
                                         <Border Grid.Row="0" Background="#EEF2F0" CornerRadius="13,13,0,0" ClipToBounds="True">
                                             <Grid>
-                                                <!-- Khung hình mặc định khi chưa có ảnh hoặc ảnh web lỗi giải mã -->
                                                 <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                                                     <StackPanel.Style>
                                                         <Style TargetType="StackPanel">
@@ -513,7 +547,6 @@
                                                                Foreground="#94A3B8" HorizontalAlignment="Center" Margin="0,2,0,0"/>
                                                 </StackPanel>
 
-                                                <!-- Hình ảnh thực tế (hỗ trợ cả URL http/https lẫn file cục bộ) -->
                                                 <Image x:Name="CarPhoto"
                                                        Source="{Binding HinhAnh, Converter={StaticResource SafeImgConv}, NotifyOnTargetUpdated=True}"
                                                        Stretch="UniformToFill"
@@ -521,7 +554,6 @@
                                                        TargetUpdated="VehicleImage_TargetUpdated"
                                                        ImageFailed="VehicleImage_ImageFailed"/>
 
-                                                <!-- Nhãn trạng thái dạng viên thuốc góc trên trái -->
                                                 <Border HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0"
                                                         CornerRadius="12" Padding="9,4"
                                                         Background="{Binding TrangThai, Converter={StaticResource StatusBgConv}}">
@@ -590,7 +622,6 @@
                     </ItemsControl>
                 </ScrollViewer>
 
-                <!-- Trạng thái trống khi không có kết quả -->
                 <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center"
                             Visibility="{Binding KhongCoDuLieu, Converter={StaticResource BoolToVis}}">
                     <materialDesign:PackIcon Kind="CarOff" Width="52" Height="52" Foreground="#CBD5E1" HorizontalAlignment="Center"/>
@@ -618,7 +649,6 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                    <!-- Header Popup -->
                     <Grid Grid.Row="0" Margin="0,0,0,16">
                         <StackPanel>
                             <TextBlock Text="{Binding TieuDeForm}" FontSize="19" FontWeight="Bold" Foreground="#132E24"/>
@@ -632,7 +662,6 @@
                         </Button>
                     </Grid>
 
-                    <!-- Nội dung Form -->
                     <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="0,0,4,0">
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -649,7 +678,6 @@
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
 
-                            <!-- Biển số & Tên xe -->
                             <StackPanel Grid.Row="0" Grid.Column="0" Margin="0,0,0,12">
                                 <TextBlock Text="Biển số xe *" FontSize="12" FontWeight="SemiBold" Foreground="#334155" Margin="0,0,0,5"/>
                                 <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding FormBienSo, UpdateSourceTrigger=PropertyChanged}"/>
@@ -660,7 +688,6 @@
                                 <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding FormTenXe, UpdateSourceTrigger=PropertyChanged}"/>
                             </StackPanel>
 
-                            <!-- Hãng xe & Năm sản xuất -->
                             <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,0,0,12">
                                 <TextBlock Text="Hãng xe *" FontSize="12" FontWeight="SemiBold" Foreground="#334155" Margin="0,0,0,5"/>
                                 <ComboBox ItemsSource="{Binding DanhSachHangXeGoiY}"
@@ -674,7 +701,6 @@
                                 <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding FormNamSanXuat, UpdateSourceTrigger=PropertyChanged}"/>
                             </StackPanel>
 
-                            <!-- Số chỗ & Giá thuê/ngày -->
                             <StackPanel Grid.Row="2" Grid.Column="0" Margin="0,0,0,12">
                                 <TextBlock Text="Số chỗ ngồi *" FontSize="12" FontWeight="SemiBold" Foreground="#334155" Margin="0,0,0,5"/>
                                 <ComboBox ItemsSource="{Binding DanhSachSoChoGoiY}"
@@ -688,18 +714,16 @@
                                 <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding FormGiaThueNgay, UpdateSourceTrigger=PropertyChanged}"/>
                             </StackPanel>
 
-                            <!-- Tiền cọc & Số Km -->
                             <StackPanel Grid.Row="3" Grid.Column="0" Margin="0,0,0,12">
                                 <TextBlock Text="Tiền cọc mặc định (VNĐ)" FontSize="12" FontWeight="SemiBold" Foreground="#334155" Margin="0,0,0,5"/>
                                 <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding FormTienCocMacDinh, UpdateSourceTrigger=PropertyChanged}"/>
                             </StackPanel>
 
                             <StackPanel Grid.Row="3" Grid.Column="2" Margin="0,0,0,12">
-                                <TextBlock Text="Số Km hiện tại (Odo)" FontSize="12" FontWeight="SemiBold" Foreground="#334155" Margin="0,0,0,5"/>
+                                <TextBlock Text="Số Km hiện tại (ODO km)" FontSize="12" FontWeight="SemiBold" Foreground="#334155" Margin="0,0,0,5"/>
                                 <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding FormSoKmHienTai, UpdateSourceTrigger=PropertyChanged}"/>
                             </StackPanel>
 
-                            <!-- Trạng thái xe -->
                             <StackPanel Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,0,0,12">
                                 <TextBlock Text="Trạng thái xe" FontSize="12" FontWeight="SemiBold" Foreground="#334155" Margin="0,0,0,5"/>
                                 <ComboBox ItemsSource="{Binding DanhSachTrangThai}"
@@ -708,7 +732,6 @@
                                           BorderBrush="#CBD5E1" Background="White"/>
                             </StackPanel>
 
-                            <!-- Hình ảnh (dán URL web hoặc chọn từ máy) -->
                             <StackPanel Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,0,0,4">
                                 <TextBlock Text="Hình ảnh xe (dán link https:// hoặc chọn tệp từ máy)"
                                            FontSize="12" FontWeight="SemiBold" Foreground="#334155" Margin="0,0,0,5"/>
@@ -763,7 +786,6 @@
                         </Grid>
                     </ScrollViewer>
 
-                    <!-- Báo lỗi validation -->
                     <Border Grid.Row="2" Background="#FEF2F2" BorderBrush="#FECACA" BorderThickness="1"
                             CornerRadius="8" Padding="10,8" Margin="0,10,0,0"
                             Visibility="{Binding ThongBaoLoiForm, Converter={StaticResource StrNotEmptyToVis}}">
@@ -774,14 +796,14 @@
                         </StackPanel>
                     </Border>
 
-                    <!-- Hàng nút đáy Popup -->
+                    <!-- Hàng nút đáy Popup Sửa/Thêm -->
                     <Grid Grid.Row="3" Margin="0,18,0,0">
                         <Button HorizontalAlignment="Left" Style="{StaticResource DangerSoftButtonStyle}"
-                                Command="{Binding XoaXeCommand}"
+                                Command="{Binding XoaMemXeCommand}"
                                 Visibility="{Binding LaCheDoSua, Converter={StaticResource BoolToVis}}">
                             <StackPanel Orientation="Horizontal">
-                                <materialDesign:PackIcon Kind="TrashCanOutline" Width="15" Height="15" VerticalAlignment="Center" Margin="0,0,6,0"/>
-                                <TextBlock Text="Xóa xe"/>
+                                <materialDesign:PackIcon Kind="Cancel" Width="15" Height="15" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                <TextBlock Text="Ngưng hoạt động"/>
                             </StackPanel>
                         </Button>
 
@@ -798,14 +820,13 @@
 
         <!-- ================= POPUP 2: CHI TIẾT XE ================= -->
         <Grid Background="#800F172A" Visibility="{Binding DangMoChiTiet, Converter={StaticResource BoolToVis}}">
-            <Border Background="White" CornerRadius="16" Width="500"
+            <Border Background="White" CornerRadius="16" Width="530"
                     HorizontalAlignment="Center" VerticalAlignment="Center" ClipToBounds="True">
                 <Border.Effect>
                     <DropShadowEffect BlurRadius="28" ShadowDepth="6" Opacity="0.2" Color="#0F172A"/>
                 </Border.Effect>
 
                 <StackPanel>
-                    <!-- Ảnh lớn phía trên -->
                     <Grid Height="195" Background="#EEF2F0">
                         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                             <StackPanel.Style>
@@ -831,7 +852,6 @@
                                TargetUpdated="VehicleImage_TargetUpdated"
                                ImageFailed="VehicleImage_ImageFailed"/>
 
-                        <!-- Trạng thái nổi -->
                         <Border HorizontalAlignment="Left" VerticalAlignment="Top" Margin="16,16,0,0"
                                 CornerRadius="12" Padding="10,5"
                                 Background="{Binding XeChiTiet.TrangThai, Converter={StaticResource StatusBgConv}}">
@@ -843,7 +863,6 @@
                             </StackPanel>
                         </Border>
 
-                        <!-- Nút đóng -->
                         <Button HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,14,14,0"
                                 Command="{Binding DongChiTietCommand}" Style="{StaticResource OutlineButtonStyle}"
                                 Width="32" Height="32" Padding="0">
@@ -851,7 +870,6 @@
                         </Button>
                     </Grid>
 
-                    <!-- Nội dung chi tiết -->
                     <StackPanel Margin="24,18,24,22">
                         <StackPanel Margin="0,0,0,14">
                             <TextBlock Text="{Binding XeChiTiet.TenXe}" FontSize="20" FontWeight="Bold" Foreground="#0F172A"/>
@@ -862,7 +880,6 @@
                             </TextBlock>
                         </StackPanel>
 
-                        <!-- Lưới thông số -->
                         <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="12" Padding="14">
                             <UniformGrid Columns="2">
                                 <StackPanel Margin="0,0,8,10">
@@ -887,7 +904,7 @@
                                 </StackPanel>
 
                                 <StackPanel Margin="8,0,0,0">
-                                    <TextBlock Text="Số Km hiện tại (Odo)" FontSize="11" Foreground="#64748B"/>
+                                    <TextBlock Text="Số Km hiện tại (ODO)" FontSize="11" Foreground="#64748B"/>
                                     <TextBlock FontSize="13.5" FontWeight="SemiBold" Foreground="#0F172A" Margin="0,2,0,0">
                                         <Run Text="{Binding XeChiTiet.SoKmHienTai, StringFormat={}{0:N0}, Mode=OneWay}"/>
                                         <Run Text=" km"/>
@@ -896,20 +913,26 @@
                             </UniformGrid>
                         </Border>
 
-                        <!-- Hàng nút hành động (BR-01: Xóa & Ngưng hoạt động + Chỉnh sửa) -->
+                        <!-- Hàng nút hành động: Bảo dưỡng, Xóa mềm (Ngưng hoạt động) & Chỉnh sửa -->
                         <Grid Margin="0,18,0,0">
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                                <Button Style="{StaticResource DangerSoftButtonStyle}"
-                                        Command="{Binding XoaXeCommand}" CommandParameter="{Binding XeChiTiet}" Margin="0,0,8,0">
+                                <Button Style="{StaticResource WarningSoftButtonStyle}"
+                                        Command="{Binding ChuyenBaoDuongCommand}"
+                                        CommandParameter="{Binding XeChiTiet}" Margin="0,0,8,0">
                                     <StackPanel Orientation="Horizontal">
-                                        <materialDesign:PackIcon Kind="TrashCanOutline" Width="14" Height="14" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                                        <TextBlock Text="Xóa"/>
+                                        <materialDesign:PackIcon Kind="WrenchOutline" Width="14" Height="14" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                        <TextBlock Text="{Binding NutBaoDuongText}"/>
                                     </StackPanel>
                                 </Button>
 
-                                <Button Content="{Binding NutNgungHoatDongText}"
-                                        Style="{StaticResource OutlineButtonStyle}"
-                                        Command="{Binding ChuyenTrangThaiNgungCommand}"/>
+                                <Button Style="{StaticResource DangerSoftButtonStyle}"
+                                        Command="{Binding XoaMemXeCommand}"
+                                        CommandParameter="{Binding XeChiTiet}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon Kind="Cancel" Width="14" Height="14" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                        <TextBlock Text="{Binding NutXoaMemText}"/>
+                                    </StackPanel>
+                                </Button>
                             </StackPanel>
 
                             <Button HorizontalAlignment="Right" Style="{StaticResource PrimaryButtonStyle}"
