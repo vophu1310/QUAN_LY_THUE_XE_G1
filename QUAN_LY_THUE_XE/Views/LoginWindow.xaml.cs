@@ -64,8 +64,8 @@ namespace QUAN_LY_THUE_XE.Views
                 TxtPasswordVisible.Text = PwdBox.Password;
                 PwdBox.Visibility = Visibility.Collapsed;
                 TxtPasswordVisible.Visibility = Visibility.Visible;
-                TxtPasswordVisible.Focus();
-                TxtPasswordVisible.CaretIndex = TxtPasswordVisible.Text.Length;
+                TxtPasswordVisible.Focus();// Đặt con trỏ vào ô TextBox
+                TxtPasswordVisible.CaretIndex = TxtPasswordVisible.Text.Length;// Đặt con trỏ ở cuối
             }
             else
             {

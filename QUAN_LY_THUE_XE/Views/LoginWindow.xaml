@@ -40,7 +40,7 @@
                     </Rectangle.Fill>
                 </Rectangle>
 
-                <!-- Huy hiệu góc trên chứa LOGO UIT -->
+                <!-- Huy hiệu góc trên chứa LOGO -->
                 <Border VerticalAlignment="Top" HorizontalAlignment="Left" Margin="36,36,0,0"
                         Background="#35000000" BorderBrush="#45FFFFFF" BorderThickness="1" 
                         CornerRadius="20" Padding="12,6">
@@ -97,7 +97,7 @@
 
                     <!-- 2. MẬT KHẨU -->
                     <TextBlock Text="Mật khẩu" FontWeight="SemiBold" FontSize="13" Foreground="#334155" Margin="0,0,0,6"/>
-                    <!-- Khung trắng CHỈ CHỨA: Ổ khóa + Ô nhập + Con mắt -->
+                    <!-- Khung trắng CHỨA: Ổ khóa + Ô nhập + Con mắt -->
                     <Border BorderBrush="#E2E8F0" BorderThickness="1.5" CornerRadius="10" Background="White" Height="48">
                         <Grid VerticalAlignment="Center" Margin="14,0">
                             <Grid.ColumnDefinitions>

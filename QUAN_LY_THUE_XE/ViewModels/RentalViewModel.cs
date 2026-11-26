@@ -230,7 +230,7 @@ namespace QUAN_LY_THUE_XE.ViewModels
                     context.SaveChanges();
                 }
 
-                // Cập nhật ảnh cho Mazda CX-5 nếu chưa có
+                // Cập nhật ảnh cho Mazda CX-5 
                 var mazda = context.Xes.FirstOrDefault(x => x.HangXe == "Mazda" || x.TenXe.Contains("CX-5"));
                 if (mazda != null && string.IsNullOrEmpty(mazda.HinhAnh))
                 {
@@ -297,7 +297,7 @@ namespace QUAN_LY_THUE_XE.ViewModels
             }
             else
             {
-                // QUAN TRỌNG: Khi hết xe sẵn sàng, BẮT BUỘC reset XeDuocChon về null!
+                //Khi hết xe sẵn sàng, reset XeDuocChon về null
                 XeDuocChon = null;
                 ThongBaoLoi = "⚠️ Hiện tại tất cả các xe đều đang được thuê hoặc đang bảo dưỡng. Vui lòng nhận xe trả ở tab 'Danh sách hợp đồng' hoặc quay lại sau!";
             }
@@ -309,7 +309,7 @@ namespace QUAN_LY_THUE_XE.ViewModels
 
             TinhToanChiPhi();
         }
-
+        // Tính toán chi phí thuê xe dựa trên ngày thuê, ngày trả và giá thuê của xe
         private void TinhToanChiPhi()
         {
             int soNgay = (int)(NgayKetThuc.Date - NgayBatDau.Date).TotalDays;
@@ -379,7 +379,7 @@ namespace QUAN_LY_THUE_XE.ViewModels
                     "Thông báo", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
 
                 LoadDuLieu();
-                TabDangChon = 1; // TỰ ĐỘNG CHUYỂN SANG TAB DANH SÁCH HỢP ĐỒNG ĐỂ NHÂN VIÊN THẤY NGAY!
+                TabDangChon = 1; // TỰ ĐỘNG CHUYỂN SANG TAB DANH SÁCH HỢP ĐỒNG ĐỂ NHÂN VIÊN THẤY
             }
             else
             {
@@ -387,6 +387,8 @@ namespace QUAN_LY_THUE_XE.ViewModels
                 LoadDuLieu();
             }
         }
+
+        // Xác nhận trả xe
 
         private void ThucHienTraXe(object? parameter)
         {
