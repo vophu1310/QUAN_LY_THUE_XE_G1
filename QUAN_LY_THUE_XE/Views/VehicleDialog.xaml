@@ -1,0 +1,270 @@
+﻿<Window x:Class="QUAN_LY_THUE_XE.Views.VehicleDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        Title="Thông tin phương tiện"
+        Width="600" Height="680" MinHeight="560" MaxHeight="780"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        Background="#F3F6F4"
+        FontFamily="Segoe UI">
+
+    <Window.Resources>
+        <Style x:Key="FormLabelStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#34483E"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="0,0,0,5"/>
+        </Style>
+
+        <Style x:Key="FormInputStyle" TargetType="TextBox">
+            <Setter Property="Height" Value="38"/>
+            <Setter Property="Padding" Value="10,0"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Foreground" Value="#132E24"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#D5DFDA"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Margin" Value="0,0,0,12"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border x:Name="Bd"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="8">
+                            <ScrollViewer x:Name="PART_ContentHost" Margin="{TemplateBinding Padding}" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="#1E604A"/>
+                            </Trigger>
+                            <Trigger Property="IsReadOnly" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#F1F5F3"/>
+                                <Setter Property="Foreground" Value="#5A6C63"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="24,20,24,20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- HEADER DIALOG -->
+        <Grid Grid.Row="0" Margin="0,0,0,16">
+            <StackPanel>
+                <TextBlock x:Name="txtTieuDe" Text="Thêm xe mới"
+                           FontSize="20" FontWeight="Bold" Foreground="#132E24"/>
+                <TextBlock x:Name="txtMoTa" Text="Nhập đầy đủ thông số kỹ thuật và giá thuê của phương tiện"
+                           FontSize="12" Foreground="#75857D" Margin="0,3,0,0"/>
+            </StackPanel>
+        </Grid>
+
+        <!-- NỘI DUNG FORM -->
+        <Border Grid.Row="1" Background="White" CornerRadius="12" BorderBrush="#E5EBE7" BorderThickness="1" Padding="18">
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                <StackPanel>
+                    <!-- Khung xem trước ảnh xe -->
+                    <Border Height="148" Background="#EEF3F0" CornerRadius="10" ClipToBounds="True"
+                            BorderBrush="#E1E8E4" BorderThickness="1" Margin="0,0,0,14">
+                        <Grid>
+                            <StackPanel x:Name="pnlImagePlaceholder" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <materialDesign:PackIcon Kind="CarOutline" Width="46" Height="46"
+                                                         Foreground="#8A9E94" HorizontalAlignment="Center"/>
+                                <TextBlock Text="Xem trước hình ảnh xe" FontSize="11.5"
+                                           Foreground="#7A8D84" Margin="0,4,0,0" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                            <Image x:Name="imgPreview" Stretch="UniformToFill"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- Hàng 1: Biển số + Hãng xe -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="14"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Biển số xe *" Style="{StaticResource FormLabelStyle}"/>
+                            <TextBox x:Name="tbBienSo" Style="{StaticResource FormInputStyle}" MaxLength="20"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="Hãng xe *" Style="{StaticResource FormLabelStyle}"/>
+                            <ComboBox x:Name="cbHangXe" IsEditable="True" Height="38" Margin="0,0,0,12"
+                                      FontSize="13" Foreground="#132E24" Background="White"
+                                      BorderBrush="#D5DFDA" VerticalContentAlignment="Center" Padding="10,0">
+                                <ComboBoxItem Content="Toyota"/>
+                                <ComboBoxItem Content="Mazda"/>
+                                <ComboBoxItem Content="VinFast"/>
+                                <ComboBoxItem Content="Hyundai"/>
+                                <ComboBoxItem Content="Kia"/>
+                                <ComboBoxItem Content="Ford"/>
+                                <ComboBoxItem Content="Honda"/>
+                                <ComboBoxItem Content="Mitsubishi"/>
+                                <ComboBoxItem Content="Mercedes-Benz"/>
+                            </ComboBox>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Hàng 2: Tên xe -->
+                    <TextBlock Text="Tên xe / Phiên bản *" Style="{StaticResource FormLabelStyle}"/>
+                    <TextBox x:Name="tbTenXe" Style="{StaticResource FormInputStyle}" MaxLength="100"/>
+
+                    <!-- Hàng 3: Năm sản xuất + Số chỗ ngồi + ODO km -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="12"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="12"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Năm sản xuất *" Style="{StaticResource FormLabelStyle}"/>
+                            <TextBox x:Name="tbNamSanXuat" Style="{StaticResource FormInputStyle}"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="Số chỗ ngồi *" Style="{StaticResource FormLabelStyle}"/>
+                            <TextBox x:Name="tbSoChoNgoi" Style="{StaticResource FormInputStyle}"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="4">
+                            <TextBlock Text="Số Km (ODO)" Style="{StaticResource FormLabelStyle}"/>
+                            <TextBox x:Name="tbSoKm" Style="{StaticResource FormInputStyle}"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Hàng 4: Giá thuê/ngày + Tiền cọc mặc định -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="14"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Giá thuê / ngày (VNĐ) *" Style="{StaticResource FormLabelStyle}"/>
+                            <TextBox x:Name="tbGiaThueNgay" Style="{StaticResource FormInputStyle}"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="Tiền cọc mặc định (VNĐ)" Style="{StaticResource FormLabelStyle}"/>
+                            <TextBox x:Name="tbTienCoc" Style="{StaticResource FormInputStyle}"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Hàng 5: Trạng thái -->
+                    <TextBlock Text="Trạng thái vận hành" Style="{StaticResource FormLabelStyle}"/>
+                    <ComboBox x:Name="cbTrangThai" Height="38" Margin="0,0,0,4"
+                              FontSize="13" Foreground="#132E24" Background="White"
+                              BorderBrush="#D5DFDA" VerticalContentAlignment="Center" Padding="10,0">
+                        <ComboBoxItem Content="Sẵn sàng"/>
+                        <ComboBoxItem Content="Đang bảo dưỡng"/>
+                        <ComboBoxItem Content="Ngưng hoạt động"/>
+                    </ComboBox>
+                    <TextBlock x:Name="txtTrangThaiNote" Visibility="Collapsed"
+                               Text="Xe đang trong hợp đồng thuê/đặt nên không thể thay đổi trạng thái trực tiếp (BR-01)."
+                               Foreground="#B45309" FontSize="11" Margin="0,0,0,10" TextWrapping="Wrap"/>
+
+                    <!-- Hàng 6: Đường dẫn ảnh hoặc chọn file từ máy -->
+                    <TextBlock Text="Hình ảnh (URL hoặc chọn từ máy)" Style="{StaticResource FormLabelStyle}" Margin="0,8,0,5"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBox x:Name="tbHinhAnh" Grid.Column="0" Style="{StaticResource FormInputStyle}"
+                                 Margin="0,0,8,0" TextChanged="TbHinhAnh_TextChanged"/>
+
+                        <Button x:Name="btnChonAnh" Grid.Column="1" Click="BtnChonAnh_Click"
+                                Height="38" Padding="12,0" Background="#EEF4F1" Foreground="#1E604A"
+                                BorderBrush="#D2E4DB" BorderThickness="1" FontSize="12" FontWeight="SemiBold" Cursor="Hand">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border x:Name="Bd" Background="{TemplateBinding Background}"
+                                            BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1"
+                                            CornerRadius="8" Padding="{TemplateBinding Padding}">
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <materialDesign:PackIcon Kind="ImagePlusOutline" Width="16" Height="16"
+                                                                     VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                            <TextBlock Text="Chọn ảnh" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="Bd" Property="Background" Value="#DCEBE3"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                    </Grid>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+
+        <!-- NÚT HÀNH ĐỘNG ĐÁY DIALOG -->
+        <Grid Grid.Row="2" Margin="0,16,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Button x:Name="btnHuy" Grid.Column="1" Content="Hủy" Click="BtnHuy_Click"
+                    Height="40" Padding="20,0" Margin="0,0,10,0"
+                    FontSize="13" FontWeight="Medium" Cursor="Hand"
+                    Background="White" Foreground="#475569" BorderBrush="#CBD5E1" BorderThickness="1">
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Bd" Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1"
+                                CornerRadius="9" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#F8FAFC"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+
+            <Button x:Name="btnLuu" Grid.Column="2" Content="✓ Lưu phương tiện" Click="BtnLuu_Click"
+                    Height="40" Padding="22,0"
+                    FontSize="13" FontWeight="SemiBold" Cursor="Hand"
+                    Background="#1E604A" Foreground="White" BorderThickness="0">
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Bd" Background="{TemplateBinding Background}"
+                                CornerRadius="9" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#164B39"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+        </Grid>
+    </Grid>
+</Window>
