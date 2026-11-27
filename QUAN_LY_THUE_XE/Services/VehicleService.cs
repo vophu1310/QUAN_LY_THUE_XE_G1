@@ -8,11 +8,11 @@ using QUAN_LY_THUE_XE.Models;
 
 namespace QUAN_LY_THUE_XE.Services
 {
-    /// <summary>
+    
     /// Tầng xử lý dữ liệu EF Core cho Module Quản lý Đội xe (bảng Xes).
     /// Sử dụng AppDbContext ngắn hạn cho từng thao tác để luôn đồng bộ dữ liệu
     /// với phân hệ Hợp đồng (RentalView) khi chuyển tab.
-    /// </summary>
+   
     public class VehicleService
     {
         public const string TrangThaiSanSang = "Sẵn sàng";
@@ -51,10 +51,9 @@ namespace QUAN_LY_THUE_XE.Services
                 || (!LaUrlWeb(path) && !File.Exists(path));
         }
 
-        /// <summary>
-        /// Giải nén ảnh xe nhúng sẵn ra thư mục VehicleImages cạnh file thực thi (.exe)
-        /// để hiển thị ổn định trên mọi máy khi kéo code từ GitHub (không cần sửa .csproj hay phụ thuộc internet).
-        /// </summary>
+
+     
+     
         private static string DamBaoFileAnhCucBo(string tenFile, string base64Data)
         {
             string thuMucAnh = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "VehicleImages");
@@ -71,10 +70,9 @@ namespace QUAN_LY_THUE_XE.Services
             return duongDan;
         }
 
-        /// <summary>
-        /// Tự động bổ sung ảnh cho Ford Everest Titanium 2023 và đảm bảo có sẵn 2 xe mới
-        /// (VinFast VF8, Hyundai Santa Fe) trong SQL Server trên mọi máy kéo code từ GitHub.
-        /// </summary>
+
+        /// Đồng bộ dữ liệu mẫu cho các xe quan trọng (Ford Everest, VinFast VF8, Hyundai Santa Fe) để hiển thị trên mọi máy.
+
         private static void DamBaoDuLieuXeMau()
         {
             if (_daDongBoDuLieuMau) return;
@@ -96,7 +94,7 @@ namespace QUAN_LY_THUE_XE.Services
                     const string newSantaFeImg = "https://i.postimg.cc/JhxHJhpG/images-(1).jpg";
                     const string newVf8Img = "https://i.postimg.cc/ncms223T/image-2048x-6a14fef69c3e4.jpg";
 
-                    // 1. Cập nhật ảnh cho Ford Everest Titanium 2023
+                    // Cập nhật ảnh cho Ford Everest Titanium 2023
                     var fordEverest = context.Xes.FirstOrDefault(x =>
                         x.BienSo == "59A-678.90" || x.TenXe.Contains("Everest"));
                     if (fordEverest != null && fordEverest.HinhAnh != newEverestImg)
@@ -105,7 +103,7 @@ namespace QUAN_LY_THUE_XE.Services
                         coThayDoi = true;
                     }
 
-                    // 2. Thêm hoặc cập nhật VinFast VF8
+                    // Thêm hoặc cập nhật VinFast VF8
                     var vinFastVf8 = context.Xes.FirstOrDefault(x => x.BienSo == "30A-667.67" || x.TenXe.Contains("VF8") || x.TenXe.Contains("VF 8"));
                     if (vinFastVf8 == null)
                     {
@@ -130,7 +128,7 @@ namespace QUAN_LY_THUE_XE.Services
                         coThayDoi = true;
                     }
 
-                    // 3. Thêm hoặc cập nhật Hyundai Santa Fe
+                    // Thêm hoặc cập nhật Hyundai Santa Fe
                     var hyundaiSantaFe = context.Xes.FirstOrDefault(x => x.BienSo == "30K-516.82" || x.TenXe.Contains("Santa Fe"));
                     if (hyundaiSantaFe == null)
                     {
@@ -169,9 +167,9 @@ namespace QUAN_LY_THUE_XE.Services
             }
         }
 
-        /// <summary>
+        
         /// Lấy toàn bộ danh sách xe từ SQL Server, sắp xếp xe mới thêm lên đầu.
-        /// </summary>
+   
         public List<Xe> LayTatCaXe()
         {
             DamBaoDuLieuXeMau();
@@ -183,9 +181,9 @@ namespace QUAN_LY_THUE_XE.Services
                           .ToList();
         }
 
-        /// <summary>
+        
         /// Tìm kiếm nhanh xe theo biển số, tên xe hoặc hãng xe.
-        /// </summary>
+       
         public List<Xe> TimKiemXe(string tuKhoa)
         {
             DamBaoDuLieuXeMau();
@@ -209,9 +207,9 @@ namespace QUAN_LY_THUE_XE.Services
                           .ToList();
         }
 
-        /// <summary>
+
         /// Kiểm tra biển số đã tồn tại trong CSDL chưa (bỏ qua chính xe đang sửa).
-        /// </summary>
+     
         public bool KiemTraTrungBienSo(string bienSo, int? excludeMaXe = null)
         {
             if (string.IsNullOrWhiteSpace(bienSo)) return false;
@@ -223,9 +221,9 @@ namespace QUAN_LY_THUE_XE.Services
                 (!excludeMaXe.HasValue || x.MaXe != excludeMaXe.Value));
         }
 
-        /// <summary>
+      
         /// Thêm xe mới vào SQL Server.
-        /// </summary>
+        
         public bool ThemXe(Xe xe) => ThemXe(xe, out _);
 
         public bool ThemXe(Xe xe, out string thongBao)
@@ -267,9 +265,9 @@ namespace QUAN_LY_THUE_XE.Services
             }
         }
 
-        /// <summary>
+       
         /// Cập nhật thông tin xe hiện có trong SQL Server (tuân thủ BR-01).
-        /// </summary>
+       
         public bool CapNhatXe(Xe xe) => CapNhatXe(xe, out _);
 
         public bool CapNhatXe(Xe xe, out string thongBao)
@@ -331,9 +329,9 @@ namespace QUAN_LY_THUE_XE.Services
             }
         }
 
-        /// <summary>
+   
         /// Chuyển đổi trạng thái giữa "Sẵn sàng" và "Đang bảo dưỡng" (BR-01).
-        /// </summary>
+
         public bool ChuyenTrangThaiBaoDuong(int maXe) => ChuyenTrangThaiBaoDuong(maXe, out _);
 
         public bool ChuyenTrangThaiBaoDuong(int maXe, out string thongBao)
@@ -382,10 +380,10 @@ namespace QUAN_LY_THUE_XE.Services
             }
         }
 
-        /// <summary>
+
         /// Xóa mềm xe theo BR-01: chuyển sang "Ngưng hoạt động" khi xe đang ở bãi,
         /// hoặc khôi phục về "Sẵn sàng" nếu xe đã ngưng hoạt động.
-        /// </summary>
+
         public bool XoaMemXe(int maXe, out string thongBao)
         {
             thongBao = string.Empty;

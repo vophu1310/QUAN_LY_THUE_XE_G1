@@ -13,7 +13,7 @@ namespace QUAN_LY_THUE_XE.Data
             // Tự động tạo CSDL nếu chưa có
             context.Database.EnsureCreated();
 
-            // 1. Tạo tài khoản mặc định nếu bảng Tài Khoản đang trống
+            //Tạo tài khoản mặc định nếu bảng Tài Khoản đang trống
             if (!context.TaiKhoans.Any())
             {
                 context.TaiKhoans.Add(new TaiKhoan
@@ -26,7 +26,7 @@ namespace QUAN_LY_THUE_XE.Data
                 context.SaveChanges();
             }
 
-            // 2. Tạo sẵn dữ liệu Xe mẫu nếu chưa có
+            // Tạo sẵn dữ liệu Xe mẫu nếu chưa có
             if (!context.Xes.Any())
             {
                 context.Xes.AddRange(

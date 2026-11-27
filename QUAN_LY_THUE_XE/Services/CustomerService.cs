@@ -3,10 +3,10 @@ using System.Data;
 
 namespace QUAN_LY_THUE_XE.Services
 {
-    /// <summary>
+   
     /// Tầng Service trung gian giữa ViewModel và Model (KhachHang).
     /// Mọi truy vấn SQL đều đi qua KhachHang → KHProvider → SQL Server.
-    /// </summary>
+    
     public class CustomerService
     {
         // Lấy toàn bộ danh sách khách hàng, chuyển từ DataTable sang List<KhachHang>.

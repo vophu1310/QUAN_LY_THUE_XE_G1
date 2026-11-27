@@ -8,10 +8,10 @@ namespace QUAN_LY_THUE_XE.Models
     public class TaiKhoan
     {
         [Key]
-        public int MaTK { get; set; } // hoặc MaTaiKhoan
+        public int MaTK { get; set; } 
         public string TenDangNhap { get; set; }
         public string MatKhau { get; set; }
-        public string VaiTro { get; set; }              // Admin, NhanVien, KhachHang
+        public string VaiTro { get; set; }              // Admin, NhanVien
         public string HoTen { get; internal set; }
     }
 }

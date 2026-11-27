@@ -14,9 +14,7 @@ namespace QUAN_LY_THUE_XE.Data
         public DbSet<PhuPhi> PhuPhis { get; set; }
         public DbSet<BienBanGiaoNhan> BienBanGiaoNhans { get; set; }
 
-        // Nếu bạn đã tạo thêm 2 Model này thì bỏ comment:
-        // public DbSet<LoaiXe> LoaiXes { get; set; }
-        // public DbSet<ChiTietPhuPhi> ChiTietPhuPhis { get; set; }
+     
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
