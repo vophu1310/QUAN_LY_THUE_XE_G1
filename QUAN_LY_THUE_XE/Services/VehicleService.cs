@@ -75,7 +75,7 @@ namespace QUAN_LY_THUE_XE.Services
         /// Tự động bổ sung ảnh cho Ford Everest Titanium 2023 và đảm bảo có sẵn 2 xe mới
         /// (VinFast VF8, Hyundai Santa Fe) trong SQL Server trên mọi máy kéo code từ GitHub.
         /// </summary>
-        private static void DamBaoDuLieuXeMau()
+        public static void DamBaoDuLieuXeMau()
         {
             if (_daDongBoDuLieuMau) return;
 
