@@ -1,5 +1,6 @@
-﻿using QUAN_LY_THUE_XE.ViewModels;
+using QUAN_LY_THUE_XE.ViewModels;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace QUAN_LY_THUE_XE.Views
 {
@@ -15,6 +16,15 @@ namespace QUAN_LY_THUE_XE.Views
             InitializeComponent();
             // Gắn ViewModel làm DataContext — XAML sẽ bind tất cả từ đây.
             DataContext = new CustomerViewModel();
+        }
+
+        // Nhấp đúp chuột vào bất kỳ dòng khách hàng nào để mở nhanh hộp thoại chỉnh sửa
+        private void DataGridRow_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (DataContext is CustomerViewModel vm)
+            {
+                vm.EditCommand.Execute(null);
+            }
         }
     }
 }

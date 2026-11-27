@@ -1,12 +1,13 @@
 using QUAN_LY_THUE_XE.Models;
+using System.Linq;
 using System.Windows;
 
 namespace QUAN_LY_THUE_XE.Views
 {
     /// <summary>
-    /// Popup thêm khách hàng mới.
-    /// Nhận đối tượng KhachHang (đã có MaKH kế tiếp) từ ViewModel,
-    /// cho người dùng nhập thông tin, rồi trả về khi bấm Lưu.
+    /// Popup Thêm mới & Chỉnh sửa thông tin khách hàng.
+    /// Nhận đối tượng KhachHang từ ViewModel,
+    /// cho người dùng nhập/sửa thông tin, rồi trả về khi bấm Lưu.
     /// </summary>
     public partial class AddCustomerDialog : Window
     {
@@ -26,16 +27,23 @@ namespace QUAN_LY_THUE_XE.Views
 
             if (isEditMode)
             {
-                Title = $"Chỉnh sửa khách hàng - KH{khachHangMoi.MaKH:D3}";
-                txtTieuDe.Text = "Chỉnh sửa thông tin khách hàng";
-                txtMoTa.Text = "Cập nhật các trường thông tin và lưu vào cơ sở dữ liệu";
-                btnLuu.Content = "✓ Cập nhật hồ sơ";
+                Title = "Chỉnh sửa khách hàng";
+                txtTieuDe.Text = "Chỉnh sửa khách hàng";
+                txtMoTa.Text = "Cập nhật thông tin khách hàng đã chọn";
+                btnLuu.Content = "✓ Lưu thay đổi";
 
-                // Điền sẵn thông tin khách hàng hiện tại
+                // Điền sẵn thông tin khách hàng hiện tại vào form
                 tbHoTen.Text = khachHangMoi.HoTen;
                 tbSODT.Text = khachHangMoi.SODT;
                 tbCCCD.Text = khachHangMoi.CCCD;
                 tbGPLX.Text = khachHangMoi.GPLX;
+            }
+            else
+            {
+                Title = "Thêm khách hàng mới";
+                txtTieuDe.Text = "Thêm khách hàng mới";
+                txtMoTa.Text = "Nhập thông tin khách hàng để lưu vào hệ thống";
+                btnLuu.Content = "+ Thêm khách hàng";
             }
         }
 
@@ -84,7 +92,7 @@ namespace QUAN_LY_THUE_XE.Views
             KhachHangMoi.CCCD = cccd;
             KhachHangMoi.GPLX = tbGPLX.Text.Trim();
 
-            // Đóng dialog với kết quả OK → ViewModel sẽ lưu vào SQL.
+            // Đóng dialog với kết quả OK → ViewModel sẽ lưu vào SQL Server.
             DialogResult = true;
             Close();
         }
@@ -96,4 +104,3 @@ namespace QUAN_LY_THUE_XE.Views
         }
     }
 }
-

@@ -178,8 +178,8 @@ namespace QUAN_LY_THUE_XE.ViewModels
         {
             LoadCommand = new RelayCommand(_ => LoadCustomers());
             AddCommand = new RelayCommand(_ => MoDialogThemKhach());
-            // [Ghi chú cho bạn Hoàng]: Chỉ cho phép bấm Chỉnh sửa khi đã chọn 1 dòng khách hàng trong bảng
-            EditCommand = new RelayCommand(_ => MoDialogSuaKhach(), _ => SelectedCustomer != null);
+            // [Ghi chú cho bạn Hoàng]: Cho phép bấm nút Chỉnh sửa (nếu chưa chọn khách sẽ hiển thị hướng dẫn)
+            EditCommand = new RelayCommand(_ => MoDialogSuaKhach());
             DeleteCommand = new RelayCommand(_ => XoaKhachHang(), _ => SelectedCustomer != null);
             PreviousPageCommand = new RelayCommand(_ => TrangHienTai--, _ => TrangHienTai > 1);
             NextPageCommand = new RelayCommand(_ => TrangHienTai++, _ => TrangHienTai < TongSoTrang);
