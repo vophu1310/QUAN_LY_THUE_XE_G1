@@ -95,7 +95,7 @@ namespace QUAN_LY_THUE_XE.Data
             }
             else
             {
-                // Cập nhật ảnh cho Ford Everest nếu trong CSDL đang rỗng
+                // Cập nhật ảnh cho Ford Everest 
                 var ford = context.Xes.FirstOrDefault(x => x.BienSo == "59A-678.90");
                 if (ford != null && string.IsNullOrEmpty(ford.HinhAnh))
                 {
@@ -103,7 +103,7 @@ namespace QUAN_LY_THUE_XE.Data
                     context.SaveChanges();
                 }
 
-                // Bổ sung Hyundai Santa Fe nếu chưa có
+                // Bổ sung Hyundai Santa Fe 
                 if (!context.Xes.Any(x => x.BienSo == "30K-516.82"))
                 {
                     context.Xes.Add(new Xe
@@ -121,7 +121,7 @@ namespace QUAN_LY_THUE_XE.Data
                     context.SaveChanges();
                 }
 
-                // Bổ sung VinFast VF8 nếu chưa có
+                // Bổ sung VinFast VF8
                 if (!context.Xes.Any(x => x.BienSo == "30A-667.67"))
                 {
                     context.Xes.Add(new Xe
