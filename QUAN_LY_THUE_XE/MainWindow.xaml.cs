@@ -13,6 +13,16 @@ namespace QUAN_LY_THUE_XE
             MainContentArea.Content = new RentalView();
         }
 
+        // Chuyển sang màn hình Quản lý Phương tiện (Xe)
+        private void BtnNavPhuongTien_Click(object sender, RoutedEventArgs e)
+        {
+            MainContentArea.Content = new VehicleView();
+            BorderNavHopDong.Background = System.Windows.Media.Brushes.Transparent;
+            BtnNavHopDong.Foreground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(162, 183, 173));
+            BtnNavKhachHang.Foreground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(162, 183, 173));
+            BtnNavPhuongTien.Foreground = System.Windows.Media.Brushes.White;
+        }
+
         // Chuyển sang màn hình Quản lý Khách hàng của bạn Hoàng
         private void BtnNavKhachHang_Click(object sender, RoutedEventArgs e)
         {
@@ -20,6 +30,7 @@ namespace QUAN_LY_THUE_XE
             BorderNavHopDong.Background = System.Windows.Media.Brushes.Transparent;
             BtnNavHopDong.Foreground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(162, 183, 173));
             BtnNavKhachHang.Foreground = System.Windows.Media.Brushes.White;
+            BtnNavPhuongTien.Foreground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(162, 183, 173));
         }
 
         // Chuyển về màn hình Quản lý Hợp đồng Thuê xe
@@ -29,6 +40,7 @@ namespace QUAN_LY_THUE_XE
             BorderNavHopDong.Background = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(36, 71, 59));
             BtnNavHopDong.Foreground = System.Windows.Media.Brushes.White;
             BtnNavKhachHang.Foreground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(162, 183, 173));
+            BtnNavPhuongTien.Foreground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(162, 183, 173));
         }
 
         // Cho phép nắm giữ chuột ở bất cứ vùng trống nào trên thanh tiêu đề/sidebar để kéo di chuyển cửa sổ
