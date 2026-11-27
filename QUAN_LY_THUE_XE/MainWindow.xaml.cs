@@ -1,24 +1,35 @@
-﻿using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using QUAN_LY_THUE_XE.Views;
 
 namespace QUAN_LY_THUE_XE
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         public MainWindow()
         {
             InitializeComponent();
+            // Mở sẵn VehicleView để bạn test trực tiếp
+            MainContentArea.Content = new VehicleView();
+        }
+
+        private void BtnDashboard_Click(object sender, RoutedEventArgs e)
+        {
+            MainContentArea.Content = new DashboardView();
+        }
+
+        private void BtnVehicle_Click(object sender, RoutedEventArgs e)
+        {
+            MainContentArea.Content = new VehicleView();
+        }
+
+        private void BtnRental_Click(object sender, RoutedEventArgs e)
+        {
+            MainContentArea.Content = new RentalView();
+        }
+
+        private void BtnCustomer_Click(object sender, RoutedEventArgs e)
+        {
+            MainContentArea.Content = new CustomerView();
         }
     }
 }
