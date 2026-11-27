@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using QUAN_LY_THUE_XE.Models;
 
@@ -69,6 +69,7 @@ namespace QUAN_LY_THUE_XE.Data
                 ); 
                 context.SaveChanges();
             }
+            QUAN_LY_THUE_XE.Services.VehicleService.DamBaoDuLieuXeMau();
         }
     }
 }
