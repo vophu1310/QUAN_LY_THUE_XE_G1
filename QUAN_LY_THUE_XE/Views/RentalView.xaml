@@ -111,7 +111,11 @@
                             <StackPanel>
                                 <Grid Margin="0,0,0,14">
                                     <TextBlock Text="01  Khách hàng" FontWeight="Bold" FontSize="15" Foreground="#0F172A"/>
-                                    <TextBlock Text="+ New customer" HorizontalAlignment="Right" Foreground="#059669" FontWeight="SemiBold" FontSize="12" Cursor="Hand"/>
+                                    <Button Command="{Binding ThemKhachHangCommand}"
+                                            Background="Transparent" BorderThickness="0" Padding="0"
+                                            HorizontalAlignment="Right" Cursor="Hand">
+                                        <TextBlock Text="+ Thêm khách hàng mới" Foreground="#059669" FontWeight="SemiBold" FontSize="12"/>
+                                    </Button>
                                 </Grid>
 
                                 <ComboBox ItemsSource="{Binding DanhSachKhachHang}"
@@ -132,9 +136,9 @@
                                 <Border Background="#F0FDF4" BorderBrush="#DCFCE7" BorderThickness="1" CornerRadius="8" Padding="14,10" Margin="0,10,0,0">
                                     <Grid>
                                         <StackPanel>
-                                            <TextBlock Text="{Binding KhachHangDuocChon.HoTen, FallbackValue='Phạm Nhật Vượng'}" FontWeight="Bold" FontSize="14" Foreground="#065F46"/>
+                                            <TextBlock Text="{Binding KhachHangDuocChon.HoTen, FallbackValue='Chưa chọn khách hàng'}" FontWeight="Bold" FontSize="14" Foreground="#065F46"/>
                                             <StackPanel Orientation="Horizontal" Margin="0,2,0,0">
-                                                <TextBlock Text="{Binding KhachHangDuocChon.SDT, FallbackValue='0901234567'}" FontSize="12" Foreground="#047857"/>
+                                                <TextBlock Text="{Binding KhachHangDuocChon.SDT, FallbackValue='--'}" FontSize="12" Foreground="#047857"/>
                                                 <TextBlock Text=" • Thành viên thân thiết" FontSize="12" Foreground="#047857"/>
                                             </StackPanel>
                                         </StackPanel>

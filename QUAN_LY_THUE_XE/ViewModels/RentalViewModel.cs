@@ -1,6 +1,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 using QUAN_LY_THUE_XE.Data;
 using QUAN_LY_THUE_XE.Helpers;
@@ -181,8 +182,45 @@ namespace QUAN_LY_THUE_XE.ViewModels
             TaoDonThueCommand = new RelayCommand(ThucHienTaoDonThue, _ => CoXeSanSang);
             TraXeCommand = new RelayCommand(ThucHienTraXe);
             LamMoiCommand = new RelayCommand(_ => LoadDuLieu());
+            ThemKhachHangCommand = new RelayCommand(_ => ThemKhachHangMoi());
 
             LoadDuLieu();
+        }
+
+        public ICommand ThemKhachHangCommand { get; }
+
+        private void ThemKhachHangMoi()
+        {
+            try
+            {
+                var customerService = new CustomerService();
+                int maKHMoi = customerService.LayMaKHKeTiep();
+                var khachMoi = new KhachHang
+                {
+                    MaKH = maKHMoi,
+                    HoTen = string.Empty,
+                    SODT = string.Empty,
+                    CCCD = string.Empty,
+                    GPLX = string.Empty,
+                    TrangThaiXacMinh = "Chưa gửi"
+                };
+
+                var dialog = new Views.AddCustomerDialog(khachMoi);
+                if (dialog.ShowDialog() == true)
+                {
+                    int rows = customerService.ThemKhachHang(dialog.KhachHangMoi);
+                    if (rows > 0)
+                    {
+                        LoadDuLieu();
+                        KhachHangDuocChon = DanhSachKhachHang.FirstOrDefault(k => k.MaKH == dialog.KhachHangMoi.MaKH)
+                                            ?? DanhSachKhachHang.LastOrDefault();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi thêm khách hàng: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         public void LoadDuLieu()
@@ -239,35 +277,44 @@ namespace QUAN_LY_THUE_XE.ViewModels
                 }
             }
 
-            if (!context.KhachHangs.Any())
+            // Đồng bộ và nạp danh sách Khách hàng từ phân hệ Khách hàng của bạn Hoàng
+            var customerService = new CustomerService();
+            var dsKhachHoang = customerService.LayTatCaKhachHang();
+
+            // Đảm bảo khách hàng của Hoàng tồn tại trong DbContext để phục vụ tạo Hợp đồng (khóa ngoại MaKH)
+            int maTKMacDinh = context.TaiKhoans.Select(t => t.MaTK).FirstOrDefault();
+            foreach (var kh in dsKhachHoang)
             {
-                int maTKMacDinh = context.TaiKhoans.Select(t => t.MaTK).FirstOrDefault();
-                context.KhachHangs.AddRange(
-                    new KhachHang
-                    {
-                        MaTK = maTKMacDinh,
-                        HoTen = "Phạm Nhật Vượng",
-                        SDT = "0901234567",
-                        CCCD = "001089012345",
-                        GPLX = "B2-998877",
-                        TrangThaiXacMinh = "Đã xác minh"
-                    },
-                    new KhachHang
-                    {
-                        MaTK = maTKMacDinh,
-                        HoTen = "Trần Đình Long",
-                        SDT = "0988665544",
-                        CCCD = "079090123456",
-                        GPLX = "B2-554433",
-                        TrangThaiXacMinh = "Đã xác minh"
-                    }
-                );
-                context.SaveChanges();
+                var existing = context.KhachHangs.Find(kh.MaKH);
+                if (existing == null)
+                {
+                    kh.MaTK = maTKMacDinh;
+                    context.KhachHangs.Add(kh);
+                }
+                else
+                {
+                    existing.HoTen = kh.HoTen;
+                    existing.SDT = kh.SDT;
+                    existing.CCCD = kh.CCCD;
+                    existing.GPLX = kh.GPLX;
+                    existing.IsBlacklisted = kh.IsBlacklisted;
+                }
             }
 
-            // Nạp danh sách Khách hàng
+            // Dọn dẹp khách hàng mẫu cũ nếu không gắn với hợp đồng nào
+            var idsHoang = dsKhachHoang.Select(k => k.MaKH).ToHashSet();
+            var khachMauCu = context.KhachHangs
+                .Where(k => !idsHoang.Contains(k.MaKH) && !context.DonThues.Any(d => d.MaKH == k.MaKH))
+                .ToList();
+            if (khachMauCu.Count > 0)
+            {
+                context.KhachHangs.RemoveRange(khachMauCu);
+            }
+            context.SaveChanges();
+
+            // Nạp danh sách Khách hàng (lấy từ dữ liệu của bạn Hoàng)
             DanhSachKhachHang.Clear();
-            foreach (var kh in _rentalService.LayDanhSachKhachHang())
+            foreach (var kh in dsKhachHoang)
                 DanhSachKhachHang.Add(kh);
 
             // Nạp danh sách Xe đang sẵn sàng
