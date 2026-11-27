@@ -1,149 +1,112 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using QUAN_LY_THUE_XE.ViewModels;
 
 namespace QUAN_LY_THUE_XE.Views
 {
+    /// <summary>
+    /// Màn hình Quản lý Đội xe (Card View chuẩn Figma).
+    /// </summary>
     public partial class VehicleView : UserControl
     {
-        private readonly VehicleViewModel _viewModel;
-        private bool _daTaiLanDau;
-
         public VehicleView()
         {
             InitializeComponent();
-            _viewModel = new VehicleViewModel();
-            DataContext = _viewModel;
+            DataContext = new VehicleViewModel();
+            Loaded += VehicleView_Loaded;
         }
 
+        // Mỗi khi người dùng quay lại tab Phương tiện, tự nạp lại dữ liệu mới nhất từ SQL Server
         private void VehicleView_Loaded(object sender, RoutedEventArgs e)
         {
-            if (_daTaiLanDau)
+            if (DataContext is VehicleViewModel vm)
             {
-                _viewModel.LoadDuLieu();
-            }
-            _daTaiLanDau = true;
-        }
-
-        private void VehicleImage_TargetUpdated(object sender, DataTransferEventArgs e)
-        {
-            if (sender is Image img)
-            {
-                img.Visibility = Visibility.Visible;
-            }
-        }
-
-        private void VehicleImage_ImageFailed(object sender, ExceptionRoutedEventArgs e)
-        {
-            if (sender is Image img)
-            {
-                img.Visibility = Visibility.Collapsed;
+                vm.LoadVehicles();
             }
         }
     }
 
+    /// <summary>
+    /// Converter tải ảnh an toàn từ URL web hoặc đường dẫn máy tính;
+    /// trả về null nếu rỗng/lỗi để hiển thị khung placeholder thay vì làm lỗi giao diện.
+    /// </summary>
     public class SafeImageConverter : IValueConverter
     {
-        public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
             string? path = value as string;
             if (string.IsNullOrWhiteSpace(path)) return null;
 
             path = path.Trim();
-
             try
             {
-                // 1. Hỗ trợ đường dẫn ảnh trực tuyến (https:// hoặc http://) như trong DbInitializer
-                if (Uri.TryCreate(path, UriKind.Absolute, out var webUri) &&
-                    (webUri.Scheme == Uri.UriSchemeHttp || webUri.Scheme == Uri.UriSchemeHttps))
+                // Hỗ trợ URL http/https
+                if (Uri.TryCreate(path, UriKind.Absolute, out Uri? uri)
+                    && (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps))
                 {
-                    var webBitmap = new BitmapImage();
-                    webBitmap.BeginInit();
-                    webBitmap.UriSource = webUri;
-                    webBitmap.CacheOption = BitmapCacheOption.OnLoad;
-                    webBitmap.EndInit();
-                    return webBitmap;
+                    var bitmap = new BitmapImage();
+                    bitmap.BeginInit();
+                    bitmap.UriSource = uri;
+                    bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                    bitmap.CreateOptions = BitmapCreateOptions.IgnoreColorProfile;
+                    bitmap.EndInit();
+                    return bitmap;
                 }
 
-                // 2. Hỗ trợ đường dẫn tệp cục bộ (tuyệt đối hoặc tương đối trong thư mục chạy)
-                string fullPath = Path.IsPathRooted(path)
-                    ? path
-                    : Path.Combine(AppDomain.CurrentDomain.BaseDirectory, path);
-
-                if (!File.Exists(fullPath)) return null;
-
-                var localBitmap = new BitmapImage();
-                localBitmap.BeginInit();
-                localBitmap.CacheOption = BitmapCacheOption.OnLoad;
-                localBitmap.UriSource = new Uri(fullPath, UriKind.Absolute);
-                localBitmap.EndInit();
-                localBitmap.Freeze();
-                return localBitmap;
+                // Hỗ trợ đường dẫn file ảnh trên máy
+                if (File.Exists(path))
+                {
+                    var bitmap = new BitmapImage();
+                    bitmap.BeginInit();
+                    bitmap.UriSource = new Uri(path, UriKind.Absolute);
+                    bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                    bitmap.EndInit();
+                    bitmap.Freeze();
+                    return bitmap;
+                }
             }
             catch
             {
-                return null;
+                // Bỏ qua lỗi định dạng ảnh không hỗ trợ (ví dụ .avif khi thiếu codec) để hiện placeholder
             }
+
+            return null;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
             => throw new NotImplementedException();
     }
 
-    public class StringNotEmptyToVisibilityConverter : IValueConverter
+    /// <summary>
+    /// Chuyển bool sang Visibility (true -> Visible, false -> Collapsed).
+    /// </summary>
+    public class BoolToVisibilityConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-            => !string.IsNullOrWhiteSpace(value as string) ? Visibility.Visible : Visibility.Collapsed;
+        public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+            => value is bool b && b ? Visibility.Visible : Visibility.Collapsed;
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
             => throw new NotImplementedException();
     }
 
-    public class StatusPillBackgroundConverter : IValueConverter
+    /// <summary>
+    /// Trả về "Active" khi phân khúc đang chọn trùng với CommandParameter của nút chip.
+    /// </summary>
+    public class CategoryMatchConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
-            string status = value?.ToString() ?? string.Empty;
-            string hex = status switch
-            {
-                "Sẵn sàng" => "#E6F6EC",
-                "Đang thuê" or "Đang cho thuê" => "#FFF1E0",
-                "Đã đặt" or "Đang được đặt" => "#E0F2FE",
-                "Đang bảo dưỡng" => "#FEE2E2",
-                "Ngưng hoạt động" => "#E2E8F0",
-                _ => "#F1F5F9"
-            };
-            return (SolidColorBrush)new BrushConverter().ConvertFromString(hex)!;
+            string? current = value as string;
+            string? target = parameter as string;
+            return string.Equals(current, target, StringComparison.OrdinalIgnoreCase) ? "Active" : "Inactive";
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-            => throw new NotImplementedException();
-    }
-
-    public class StatusPillForegroundConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            string status = value?.ToString() ?? string.Empty;
-            string hex = status switch
-            {
-                "Sẵn sàng" => "#157347",
-                "Đang thuê" or "Đang cho thuê" => "#C2410C",
-                "Đã đặt" or "Đang được đặt" => "#0369A1",
-                "Đang bảo dưỡng" => "#DC2626",
-                "Ngưng hoạt động" => "#475569",
-                _ => "#475569"
-            };
-            return (SolidColorBrush)new BrushConverter().ConvertFromString(hex)!;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
             => throw new NotImplementedException();
     }
 }
