@@ -13,7 +13,7 @@ namespace QUAN_LY_THUE_XE
             MainContentArea.Content = new RentalView();
         }
 
-        // Chuyển sang màn hình Quản lý Phương tiện (Xe)
+        // Chuyển sang màn hình Quản lý Phương tiện 
         private void BtnNavPhuongTien_Click(object sender, RoutedEventArgs e)
         {
             MainContentArea.Content = new VehicleView();
@@ -23,7 +23,7 @@ namespace QUAN_LY_THUE_XE
             BtnNavPhuongTien.Foreground = System.Windows.Media.Brushes.White;
         }
 
-        // Chuyển sang màn hình Quản lý Khách hàng của bạn Hoàng
+        // Chuyển sang màn hình Quản lý Khách hàng
         private void BtnNavKhachHang_Click(object sender, RoutedEventArgs e)
         {
             MainContentArea.Content = new CustomerView();
