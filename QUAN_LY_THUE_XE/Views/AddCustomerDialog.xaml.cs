@@ -13,13 +13,24 @@ namespace QUAN_LY_THUE_XE.Views
         // Đối tượng khách hàng sẽ được trả về cho ViewModel sau khi lưu.
         public KhachHang KhachHangMoi { get; private set; }
 
-        public AddCustomerDialog(KhachHang khachHangMoi)
+        public AddCustomerDialog(KhachHang khachHangMoi, bool isEditMode = false)
         {
             InitializeComponent();
             KhachHangMoi = khachHangMoi;
 
-            // Hiển thị mã KH dạng KH001, KH002...
+            // Cùng cửa sổ dùng cho thêm và sửa; chế độ sửa hiển thị sẵn thông tin khách được chọn.
+            Title = isEditMode ? "Chỉnh sửa khách hàng" : "Thêm khách hàng mới";
+            DialogHeading.Text = Title;
+            DialogDescription.Text = isEditMode
+                ? "Cập nhật thông tin khách hàng đã chọn"
+                : "Nhập thông tin khách hàng để lưu vào hệ thống";
+            SaveButton.Content = isEditMode ? "✓ Lưu thay đổi" : "✓ Lưu khách hàng";
+
             tbMaKH.Text = $"KH{khachHangMoi.MaKH:D3}";
+            tbHoTen.Text = khachHangMoi.HoTen;
+            tbSODT.Text = khachHangMoi.SODT;
+            tbCCCD.Text = khachHangMoi.CCCD;
+            tbGPLX.Text = khachHangMoi.GPLX;
         }
 
         // Kiểm tra dữ liệu form; nếu hợp lệ, gán vào model và trả kết quả cho ViewModel để lưu.

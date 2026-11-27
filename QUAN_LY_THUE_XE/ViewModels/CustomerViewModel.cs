@@ -39,7 +39,7 @@ namespace QUAN_LY_THUE_XE.ViewModels
             {
                 if (SetProperty(ref _selectedCustomer, value))
                 {
-                    // Cập nhật trạng thái nút xóa khi chọn/bỏ chọn khách.
+                    // Cập nhật trạng thái các nút phụ thuộc vào khách đang được chọn.
                     CommandManager.InvalidateRequerySuggested();
                 }
             }
@@ -157,6 +157,7 @@ namespace QUAN_LY_THUE_XE.ViewModels
 
         public ICommand LoadCommand { get; }
         public ICommand AddCommand { get; }
+        public ICommand EditCommand { get; }
         public ICommand DeleteCommand { get; }
         public ICommand PreviousPageCommand { get; }
         public ICommand NextPageCommand { get; }
@@ -169,6 +170,7 @@ namespace QUAN_LY_THUE_XE.ViewModels
         {
             LoadCommand = new RelayCommand(_ => LoadCustomers());
             AddCommand = new RelayCommand(_ => MoDialogThemKhach());
+            EditCommand = new RelayCommand(_ => MoDialogSuaKhach(), _ => SelectedCustomer is not null);
             DeleteCommand = new RelayCommand(_ => XoaKhachHang(), _ => SelectedCustomer != null);
             PreviousPageCommand = new RelayCommand(_ => TrangHienTai--, _ => TrangHienTai > 1);
             NextPageCommand = new RelayCommand(_ => TrangHienTai++, _ => TrangHienTai < TongSoTrang);
@@ -288,6 +290,78 @@ namespace QUAN_LY_THUE_XE.ViewModels
             catch (SqlException ex)
             {
                 StatusMessage = $"Lỗi thêm khách hàng: {ex.Message}";
+            }
+        }
+
+        /// <summary>
+        /// Mở dialog với dữ liệu bản sao; chỉ lưu xuống SQL Server khi người dùng xác nhận.
+        /// </summary>
+        private void MoDialogSuaKhach()
+        {
+            if (SelectedCustomer is not KhachHang selectedCustomer)
+            {
+                StatusMessage = "Vui lòng chọn khách hàng cần chỉnh sửa.";
+                return;
+            }
+
+            var customerToEdit = new KhachHang
+            {
+                MaKH = selectedCustomer.MaKH,
+                MaTK = selectedCustomer.MaTK,
+                HoTen = selectedCustomer.HoTen,
+                SODT = selectedCustomer.SODT,
+                CCCD = selectedCustomer.CCCD,
+                GPLX = selectedCustomer.GPLX,
+                TrangThaiXacMinh = selectedCustomer.TrangThaiXacMinh,
+                IsBlacklisted = selectedCustomer.IsBlacklisted
+            };
+
+            var dialog = new Views.AddCustomerDialog(customerToEdit, isEditMode: true);
+            if (dialog.ShowDialog() != true)
+            {
+                return;
+            }
+
+            try
+            {
+                int affectedRows = _service.CapNhatKhachHang(dialog.KhachHangMoi);
+                if (affectedRows == 0)
+                {
+                    StatusMessage = "Không tìm thấy khách hàng cần cập nhật trong cơ sở dữ liệu.";
+                    LoadCustomers();
+                    return;
+                }
+
+                // Xóa từ khóa tìm kiếm cũ để khách vẫn hiện nếu SĐT/CCCD vừa được sửa.
+                if (string.IsNullOrEmpty(SearchText))
+                {
+                    LoadCustomers();
+                }
+                else
+                {
+                    SearchText = string.Empty;
+                }
+
+                var customerAfterUpdate = _tatCaKhachHang.FirstOrDefault(customer => customer.MaKH == selectedCustomer.MaKH);
+                if (customerAfterUpdate is not null)
+                {
+                    int filteredIndex = LayDanhSachTheoBoLoc().FindIndex(customer => customer.MaKH == customerAfterUpdate.MaKH);
+                    if (filteredIndex >= 0)
+                    {
+                        _trangHienTai = filteredIndex / SoKhachMoiTrang + 1;
+                        OnPropertyChanged(nameof(TrangHienTai));
+                        CapNhatTongSoTrang();
+                        HienThiTrang();
+                        OnPropertyChanged(nameof(ThongTinTrang));
+                        SelectedCustomer = customerAfterUpdate;
+                    }
+
+                    StatusMessage = $"Đã cập nhật thông tin khách hàng {customerAfterUpdate.HoTen}.";
+                }
+            }
+            catch (SqlException ex)
+            {
+                StatusMessage = $"Lỗi cập nhật khách hàng: {ex.Message}";
             }
         }
 

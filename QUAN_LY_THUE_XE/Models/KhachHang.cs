@@ -48,17 +48,16 @@ namespace QUAN_LY_THUE_XE.Models
             );
         }
 
-        // Cập nhật các trường hồ sơ theo MaKH; cập nhật IsBlacklisted chỉ khi schema có cột đó.
+        // Cập nhật thông tin hồ sơ theo MaKH, không phụ thuộc các cột trạng thái tùy chọn của schema.
         public int CapNhatKhachHang(KhachHang kh)
         {
-            const string sql = "UPDATE DSKHACHHANG SET CCCD = @CCCD, HoTen = @HoTen, SODT = @SODT, GPLX = @GPLX WHERE MaKH = @MaKH; IF COL_LENGTH(N'dbo.DSKHACHHANG', N'IsBlacklisted') IS NOT NULL UPDATE DSKHACHHANG SET IsBlacklisted = @IsBlacklisted WHERE MaKH = @MaKH";
+            const string sql = "UPDATE DSKHACHHANG SET CCCD = @CCCD, HoTen = @HoTen, SODT = @SODT, GPLX = @GPLX WHERE MaKH = @MaKH";
             return new KHProvider().ExecuteNonQuery(CommandType.Text, sql,
                 new SqlParameter("@MaKH", SqlDbType.Int) { Value = kh.MaKH },
                 new SqlParameter("@CCCD", SqlDbType.NVarChar, 20) { Value = kh.CCCD },
                 new SqlParameter("@HoTen", SqlDbType.NVarChar, 100) { Value = kh.HoTen },
                 new SqlParameter("@SODT", SqlDbType.NVarChar, 20) { Value = kh.SODT },
-                new SqlParameter("@GPLX", SqlDbType.NVarChar, 30) { Value = kh.GPLX },
-                new SqlParameter("@IsBlacklisted", SqlDbType.Bit) { Value = kh.IsBlacklisted }
+                new SqlParameter("@GPLX", SqlDbType.NVarChar, 30) { Value = kh.GPLX }
             );
         }
 

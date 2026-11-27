@@ -19,9 +19,9 @@
 
         <!-- Tiêu đề dialog -->
         <StackPanel Grid.Row="0" Margin="0,0,0,20">
-            <TextBlock Text="Thêm khách hàng mới"
+            <TextBlock x:Name="DialogHeading" Text="Thêm khách hàng mới"
                        FontSize="20" FontWeight="Bold" Foreground="#1E293B"/>
-            <TextBlock Text="Nhập thông tin khách hàng để lưu vào hệ thống"
+            <TextBlock x:Name="DialogDescription" Text="Nhập thông tin khách hàng để lưu vào hệ thống"
                        FontSize="12" Foreground="#64748B" Margin="0,4,0,0"/>
         </StackPanel>
 
@@ -96,7 +96,7 @@
             </Button>
 
             <!-- Nút Lưu (xanh lá đậm) -->
-            <Button Grid.Column="2" Content="✓ Lưu khách hàng" Click="BtnLuu_Click"
+            <Button x:Name="SaveButton" Grid.Column="2" Content="✓ Lưu khách hàng" Click="BtnLuu_Click"
                     Padding="20,10"
                     FontSize="13" FontWeight="SemiBold" Cursor="Hand"
                     Background="#166534" Foreground="White"

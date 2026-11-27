@@ -97,9 +97,9 @@
                     <ComboBoxItem Content="Cảnh báo"/>
                 </ComboBox>
 
-                <!-- Nút Làm mới -->
-                <Button Grid.Column="2" Content="↻ Làm mới"
-                        Command="{Binding LoadCommand}"
+                <!-- Chỉ bật khi đã chọn khách; dialog dùng chung với luồng thêm khách hàng. -->
+                <Button Grid.Column="2" Content="✎  Chỉnh sửa"
+                        Command="{Binding EditCommand}"
                         Padding="12,8" Margin="0,0,8,0"
                         FontSize="11" Cursor="Hand"
                         Background="#F7F9F7" Foreground="#52645A"
