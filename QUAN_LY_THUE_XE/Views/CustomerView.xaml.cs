@@ -1,26 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows;
+﻿using QUAN_LY_THUE_XE.ViewModels;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace QUAN_LY_THUE_XE.Views
 {
     /// <summary>
-    /// Interaction logic for CustomerView.xaml
+    /// Code-behind cho CustomerView.
+    /// Theo kiến trúc MVVM, file này chỉ gắn DataContext.
+    /// Toàn bộ logic nằm trong CustomerViewModel.
     /// </summary>
     public partial class CustomerView : UserControl
     {
         public CustomerView()
         {
             InitializeComponent();
+            // Gắn ViewModel làm DataContext — XAML sẽ bind tất cả từ đây.
+            DataContext = new CustomerViewModel();
         }
     }
 }

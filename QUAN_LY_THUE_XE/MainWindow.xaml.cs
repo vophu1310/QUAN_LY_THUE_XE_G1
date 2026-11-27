@@ -1,4 +1,4 @@
-﻿using System.Windows;
+using System.Windows;
 using System.Windows.Input;
 using QUAN_LY_THUE_XE.Views;
 
@@ -9,8 +9,26 @@ namespace QUAN_LY_THUE_XE
         public MainWindow()
         {
             InitializeComponent();
-            // Nạp giao diện Thuê xe vào khung hiển thị
+            // Nạp giao diện Thuê xe vào khung hiển thị mặc định
             MainContentArea.Content = new RentalView();
+        }
+
+        // Chuyển sang màn hình Quản lý Khách hàng của bạn Hoàng
+        private void BtnNavKhachHang_Click(object sender, RoutedEventArgs e)
+        {
+            MainContentArea.Content = new CustomerView();
+            BorderNavHopDong.Background = System.Windows.Media.Brushes.Transparent;
+            BtnNavHopDong.Foreground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(162, 183, 173));
+            BtnNavKhachHang.Foreground = System.Windows.Media.Brushes.White;
+        }
+
+        // Chuyển về màn hình Quản lý Hợp đồng Thuê xe
+        private void BtnNavHopDong_Click(object sender, RoutedEventArgs e)
+        {
+            MainContentArea.Content = new RentalView();
+            BorderNavHopDong.Background = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(36, 71, 59));
+            BtnNavHopDong.Foreground = System.Windows.Media.Brushes.White;
+            BtnNavKhachHang.Foreground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(162, 183, 173));
         }
 
         // Cho phép nắm giữ chuột ở bất cứ vùng trống nào trên thanh tiêu đề/sidebar để kéo di chuyển cửa sổ
