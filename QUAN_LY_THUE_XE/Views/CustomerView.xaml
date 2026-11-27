@@ -20,11 +20,12 @@
         </Grid.RowDefinitions>
 
         <!-- ============================================================ -->
-        <!-- ROW 0: TIÊU ĐỀ + BADGE TỔNG SỐ KHÁCH HÀNG                  -->
+        <!-- ROW 0: TIÊU ĐỀ + 4 BADGE THỐNG KÊ (ĐỒNG BỘ DEMO BẠN HOÀNG)   -->
         <!-- ============================================================ -->
         <Grid Grid.Row="0" Margin="0,0,0,20">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
@@ -35,25 +36,33 @@
                 <TextBlock Text="Danh sách khách hàng và thông tin thuê xe" FontSize="12" Foreground="#839189" Margin="0,4,0,0"/>
             </StackPanel>
 
+            <!-- 1. Thẻ Tổng số khách hàng -->
             <Border Grid.Column="1" Background="White" BorderBrush="#E7ECE9" BorderThickness="1" CornerRadius="7" Padding="12,7" Margin="5,0" MinWidth="65">
                 <StackPanel><TextBlock Text="{Binding TongSoKhachHang}" Foreground="#20362D" FontSize="15" FontWeight="Bold"/><TextBlock Text="Khách hàng" Foreground="#75837B" FontSize="8"/></StackPanel>
             </Border>
+            <!-- 2. Thẻ An toàn -->
             <Border Grid.Column="2" Background="#EAF3EE" CornerRadius="7" Padding="12,7" Margin="5,0" MinWidth="65">
                 <StackPanel><TextBlock Text="{Binding SoKhachAnToan}" Foreground="#27664F" FontSize="15" FontWeight="Bold"/><TextBlock Text="An toàn" Foreground="#587967" FontSize="8"/></StackPanel>
             </Border>
-            <Border Grid.Column="3" Background="#FBF1E3" CornerRadius="7" Padding="12,7" Margin="5,0,0,0" MinWidth="65">
+            <!-- 3. Thẻ Cảnh báo -->
+            <Border Grid.Column="3" Background="#FBF1E3" CornerRadius="7" Padding="12,7" Margin="5,0" MinWidth="65">
                 <StackPanel><TextBlock Text="{Binding SoKhachCanhBao}" Foreground="#AD7027" FontSize="15" FontWeight="Bold"/><TextBlock Text="Cảnh báo" Foreground="#977144" FontSize="8"/></StackPanel>
+            </Border>
+            <!-- 4. [Ghi chú cho bạn Hoàng]: Thẻ Blacklist màu đỏ nâu đúng theo giao diện demo của bạn Hoàng -->
+            <Border Grid.Column="4" Background="#8B2500" CornerRadius="7" Padding="12,7" Margin="5,0,0,0" MinWidth="65">
+                <StackPanel><TextBlock Text="{Binding SoKhachBlacklist}" Foreground="White" FontSize="15" FontWeight="Bold"/><TextBlock Text="Blacklist" Foreground="#FCA5A5" FontSize="8" FontWeight="SemiBold"/></StackPanel>
             </Border>
         </Grid>
 
         <!-- ============================================================ -->
-        <!-- ROW 1: THANH TÌM KIẾM + NÚT BỘ LỌC + NÚT THÊM MỚI        -->
+        <!-- ROW 1: THANH TÌM KIẾM + NÚT BỘ LỌC + NÚT CHỈNH SỬA + THÊM MỚI-->
         <!-- ============================================================ -->
         <Border Grid.Row="1" Background="White" CornerRadius="10"
                 Padding="16,12" Margin="0,0,0,16">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
@@ -92,6 +101,7 @@
                     </TextBlock>
                 </Grid>
 
+                <!-- Bộ lọc trạng thái (Hỗ trợ Tất cả, An toàn, Cảnh báo, Blacklist) -->
                 <ComboBox Grid.Column="1" SelectedIndex="{Binding StatusFilterIndex, Mode=TwoWay}"
                           MinWidth="120" Padding="9,7" Margin="0,0,8,0"
                           FontSize="10" Foreground="#52645A" Background="White"
@@ -99,6 +109,7 @@
                     <ComboBoxItem Content="Tất cả trạng thái"/>
                     <ComboBoxItem Content="An toàn"/>
                     <ComboBoxItem Content="Cảnh báo"/>
+                    <ComboBoxItem Content="Blacklist"/>
                 </ComboBox>
 
                 <!-- Nút Làm mới -->
@@ -115,8 +126,22 @@
                     </Button.Resources>
                 </Button>
 
+                <!-- [Ghi chú cho bạn Hoàng]: Nút Chỉnh sửa khách hàng đang chọn trên DataGrid -->
+                <Button Grid.Column="3" Content="✎ Chỉnh sửa"
+                        Command="{Binding EditCommand}"
+                        Padding="12,8" Margin="0,0,8,0"
+                        FontSize="11" Cursor="Hand"
+                        Background="#F7F9F7" Foreground="#52645A"
+                        BorderBrush="#E1E7E3" BorderThickness="1">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="6"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+
                 <!-- Mở dialog nhập khách hàng và lưu qua ViewModel/Service hiện có. -->
-                <Button Grid.Column="3" Content="＋  Thêm khách hàng"
+                <Button Grid.Column="4" Content="＋  Thêm khách hàng"
                         Command="{Binding AddCommand}"
                         Padding="14,8"
                         FontSize="11" FontWeight="SemiBold" Cursor="Hand"

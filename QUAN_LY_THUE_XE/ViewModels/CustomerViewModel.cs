@@ -83,6 +83,14 @@ namespace QUAN_LY_THUE_XE.ViewModels
             set => SetProperty(ref _soKhachCanhBao, value);
         }
 
+        // [Ghi chú cho bạn Hoàng]: Thêm thuộc tính thống kê số khách Blacklist để hiển thị thẻ thứ 4 đúng như video demo
+        private int _soKhachBlacklist;
+        public int SoKhachBlacklist
+        {
+            get => _soKhachBlacklist;
+            set => SetProperty(ref _soKhachBlacklist, value);
+        }
+
         private int _statusFilterIndex;
         public int StatusFilterIndex
         {
@@ -156,6 +164,8 @@ namespace QUAN_LY_THUE_XE.ViewModels
 
         public ICommand LoadCommand { get; }
         public ICommand AddCommand { get; }
+        // [Ghi chú cho bạn Hoàng]: Thêm EditCommand để xử lý nút "Chỉnh sửa" đúng như giao diện video của Hoàng
+        public ICommand EditCommand { get; }
         public ICommand DeleteCommand { get; }
         public ICommand PreviousPageCommand { get; }
         public ICommand NextPageCommand { get; }
@@ -168,6 +178,8 @@ namespace QUAN_LY_THUE_XE.ViewModels
         {
             LoadCommand = new RelayCommand(_ => LoadCustomers());
             AddCommand = new RelayCommand(_ => MoDialogThemKhach());
+            // [Ghi chú cho bạn Hoàng]: Chỉ cho phép bấm Chỉnh sửa khi đã chọn 1 dòng khách hàng trong bảng
+            EditCommand = new RelayCommand(_ => MoDialogSuaKhach(), _ => SelectedCustomer != null);
             DeleteCommand = new RelayCommand(_ => XoaKhachHang(), _ => SelectedCustomer != null);
             PreviousPageCommand = new RelayCommand(_ => TrangHienTai--, _ => TrangHienTai > 1);
             NextPageCommand = new RelayCommand(_ => TrangHienTai++, _ => TrangHienTai < TongSoTrang);
@@ -192,9 +204,11 @@ namespace QUAN_LY_THUE_XE.ViewModels
                     ? _service.LayTatCaKhachHang()
                     : _service.TimKiemKhachHang(_searchText);
 
+                // [Ghi chú cho bạn Hoàng]: Tính toán đủ 4 chỉ số thống kê
                 TongSoKhachHang = _tatCaKhachHang.Count;
                 SoKhachAnToan = _tatCaKhachHang.Count(customer => !customer.IsBlacklisted);
-                SoKhachCanhBao = _tatCaKhachHang.Count(customer => customer.IsBlacklisted);
+                SoKhachCanhBao = 0; // Dự phòng cho các trường hợp cảnh báo vi phạm nhẹ
+                SoKhachBlacklist = _tatCaKhachHang.Count(customer => customer.IsBlacklisted);
 
                 // Khi tải/tìm kiếm lại, bắt đầu từ trang đầu với trạng thái lọc hiện hành.
                 _trangHienTai = 1;
@@ -223,7 +237,8 @@ namespace QUAN_LY_THUE_XE.ViewModels
             return _statusFilterIndex switch
             {
                 1 => _tatCaKhachHang.Where(customer => !customer.IsBlacklisted).ToList(),
-                2 => _tatCaKhachHang.Where(customer => customer.IsBlacklisted).ToList(),
+                2 => _tatCaKhachHang.Where(customer => !customer.IsBlacklisted && false).ToList(), // Cảnh báo
+                3 => _tatCaKhachHang.Where(customer => customer.IsBlacklisted).ToList(), // Blacklist
                 _ => _tatCaKhachHang
             };
         }
@@ -283,6 +298,55 @@ namespace QUAN_LY_THUE_XE.ViewModels
             catch (SqlException ex)
             {
                 StatusMessage = $"Lỗi thêm khách hàng: {ex.Message}";
+            }
+        }
+
+        /// <summary>
+        /// [Ghi chú cho bạn Hoàng]:
+        /// Mở dialog chỉnh sửa thông tin khách hàng đang được chọn (Họ tên, SĐT, CCCD, GPLX).
+        /// Khi bấm Lưu sẽ gọi CustomerService.CapNhatKhachHang() để lưu lại vào CSDL.
+        /// </summary>
+        private void MoDialogSuaKhach()
+        {
+            if (SelectedCustomer is null)
+            {
+                MessageBox.Show("Vui lòng nhấp chọn một khách hàng trong bảng trước khi bấm Chỉnh sửa.",
+                    "Chưa chọn khách hàng", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            try
+            {
+                // Tạo bản sao để tránh làm sai lệch dữ liệu hiển thị nếu người dùng bấm Hủy
+                var khachCanSua = new KhachHang
+                {
+                    MaKH = SelectedCustomer.MaKH,
+                    HoTen = SelectedCustomer.HoTen,
+                    SODT = SelectedCustomer.SODT,
+                    CCCD = SelectedCustomer.CCCD,
+                    GPLX = SelectedCustomer.GPLX,
+                    IsBlacklisted = SelectedCustomer.IsBlacklisted,
+                    TrangThaiXacMinh = SelectedCustomer.TrangThaiXacMinh
+                };
+
+                var dialog = new Views.AddCustomerDialog(khachCanSua, isEditMode: true);
+                if (dialog.ShowDialog() == true)
+                {
+                    int rows = _service.CapNhatKhachHang(dialog.KhachHangMoi);
+                    if (rows > 0)
+                    {
+                        StatusMessage = $"Đã cập nhật thông tin khách hàng {dialog.KhachHangMoi.HoTen} thành công.";
+                        LoadCustomers();
+                    }
+                    else
+                    {
+                        StatusMessage = "Không thể cập nhật khách hàng. Vui lòng thử lại.";
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                StatusMessage = $"Lỗi cập nhật khách hàng: {ex.Message}";
             }
         }
 
