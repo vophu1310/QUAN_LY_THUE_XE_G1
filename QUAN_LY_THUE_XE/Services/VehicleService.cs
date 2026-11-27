@@ -92,17 +92,21 @@ namespace QUAN_LY_THUE_XE.Services
                     using var context = new AppDbContext();
                     bool coThayDoi = false;
 
-                    // 1. Bổ sung ảnh cho Ford Everest Titanium 2023 nếu đang trống hoặc sai đường dẫn
+                    const string newEverestImg = "https://i.postimg.cc/XNzFQp47/image-1200x-6221935e5b1da.jpg";
+                    const string newSantaFeImg = "https://i.postimg.cc/JhxHJhpG/images-(1).jpg";
+                    const string newVf8Img = "https://i.postimg.cc/ncms223T/image-2048x-6a14fef69c3e4.jpg";
+
+                    // 1. Cập nhật ảnh cho Ford Everest Titanium 2023
                     var fordEverest = context.Xes.FirstOrDefault(x =>
                         x.BienSo == "59A-678.90" || x.TenXe.Contains("Everest"));
-                    if (fordEverest != null && AnhKhongHopLe(fordEverest.HinhAnh))
+                    if (fordEverest != null && fordEverest.HinhAnh != newEverestImg)
                     {
-                        fordEverest.HinhAnh = everestImagePath;
+                        fordEverest.HinhAnh = newEverestImg;
                         coThayDoi = true;
                     }
 
-                    // 2. Thêm VinFast VF8 (2024 - 5 chỗ - Electric) nếu chưa tồn tại
-                    var vinFastVf8 = context.Xes.FirstOrDefault(x => x.BienSo == "30A-667.67");
+                    // 2. Thêm hoặc cập nhật VinFast VF8
+                    var vinFastVf8 = context.Xes.FirstOrDefault(x => x.BienSo == "30A-667.67" || x.TenXe.Contains("VF8") || x.TenXe.Contains("VF 8"));
                     if (vinFastVf8 == null)
                     {
                         context.Xes.Add(new Xe
@@ -116,18 +120,18 @@ namespace QUAN_LY_THUE_XE.Services
                             TienCocMacDinh = 3000000,
                             SoKmHienTai = 5200,
                             TrangThai = TrangThaiSanSang,
-                            HinhAnh = vf8ImagePath
+                            HinhAnh = newVf8Img
                         });
                         coThayDoi = true;
                     }
-                    else if (AnhKhongHopLe(vinFastVf8.HinhAnh))
+                    else if (vinFastVf8.HinhAnh != newVf8Img)
                     {
-                        vinFastVf8.HinhAnh = vf8ImagePath;
+                        vinFastVf8.HinhAnh = newVf8Img;
                         coThayDoi = true;
                     }
 
-                    // 3. Thêm Hyundai Santa Fe (2024 - SUV 6 chỗ - Automatic · Diesel) nếu chưa tồn tại
-                    var hyundaiSantaFe = context.Xes.FirstOrDefault(x => x.BienSo == "30K-516.82");
+                    // 3. Thêm hoặc cập nhật Hyundai Santa Fe
+                    var hyundaiSantaFe = context.Xes.FirstOrDefault(x => x.BienSo == "30K-516.82" || x.TenXe.Contains("Santa Fe"));
                     if (hyundaiSantaFe == null)
                     {
                         context.Xes.Add(new Xe
@@ -141,13 +145,13 @@ namespace QUAN_LY_THUE_XE.Services
                             TienCocMacDinh = 3600000,
                             SoKmHienTai = 9800,
                             TrangThai = TrangThaiDangThue,
-                            HinhAnh = santaFeImagePath
+                            HinhAnh = newSantaFeImg
                         });
                         coThayDoi = true;
                     }
-                    else if (AnhKhongHopLe(hyundaiSantaFe.HinhAnh))
+                    else if (hyundaiSantaFe.HinhAnh != newSantaFeImg)
                     {
-                        hyundaiSantaFe.HinhAnh = santaFeImagePath;
+                        hyundaiSantaFe.HinhAnh = newSantaFeImg;
                         coThayDoi = true;
                     }
 

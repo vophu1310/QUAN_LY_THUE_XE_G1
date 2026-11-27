@@ -277,15 +277,16 @@ namespace QUAN_LY_THUE_XE.ViewModels
                 }
 
                 // Cập nhật ảnh cho Ford Everest
-                var ford = context.Xes.FirstOrDefault(x => x.BienSo == "59A-678.90");
-                if (ford != null && string.IsNullOrEmpty(ford.HinhAnh))
+                var ford = context.Xes.FirstOrDefault(x => x.BienSo == "59A-678.90" || x.TenXe.Contains("Everest"));
+                if (ford != null && ford.HinhAnh != "https://i.postimg.cc/XNzFQp47/image-1200x-6221935e5b1da.jpg")
                 {
-                    ford.HinhAnh = "https://upload.wikimedia.org/wikipedia/commons/4/4c/FORD_EVEREST_%28U375%2CUA%29_China_%285%29.jpg";
+                    ford.HinhAnh = "https://i.postimg.cc/XNzFQp47/image-1200x-6221935e5b1da.jpg";
                     context.SaveChanges();
                 }
 
-                // Bổ sung Hyundai Santa Fe nếu chưa có
-                if (!context.Xes.Any(x => x.BienSo == "30K-516.82"))
+                // Cập nhật / Bổ sung Hyundai Santa Fe
+                var santaFe = context.Xes.FirstOrDefault(x => x.BienSo == "30K-516.82" || x.TenXe.Contains("Santa Fe"));
+                if (santaFe == null)
                 {
                     context.Xes.Add(new Xe
                     {
@@ -297,13 +298,19 @@ namespace QUAN_LY_THUE_XE.ViewModels
                         GiaThueNgay = 1200000,
                         SoKmHienTai = 9800,
                         TrangThai = "Đang thuê",
-                        HinhAnh = "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Hyundai_Santa_Fe_Calligraphy_2.5T_AWD_%28MX5%29_%E2%80%93_f_17072024.jpg/800px-Hyundai_Santa_Fe_Calligraphy_2.5T_AWD_%28MX5%29_%E2%80%93_f_17072024.jpg"
+                        HinhAnh = "https://i.postimg.cc/JhxHJhpG/images-(1).jpg"
                     });
                     context.SaveChanges();
                 }
+                else if (santaFe.HinhAnh != "https://i.postimg.cc/JhxHJhpG/images-(1).jpg")
+                {
+                    santaFe.HinhAnh = "https://i.postimg.cc/JhxHJhpG/images-(1).jpg";
+                    context.SaveChanges();
+                }
 
-                // Bổ sung VinFast VF8 nếu chưa có
-                if (!context.Xes.Any(x => x.BienSo == "30A-667.67"))
+                // Cập nhật / Bổ sung VinFast VF8
+                var vf8 = context.Xes.FirstOrDefault(x => x.BienSo == "30A-667.67" || x.TenXe.Contains("VF8") || x.TenXe.Contains("VF 8"));
+                if (vf8 == null)
                 {
                     context.Xes.Add(new Xe
                     {
@@ -315,8 +322,13 @@ namespace QUAN_LY_THUE_XE.ViewModels
                         GiaThueNgay = 950000,
                         SoKmHienTai = 5200,
                         TrangThai = "Sẵn sàng",
-                        HinhAnh = "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/VinFast_VF_8_%28cropped%29.jpg/800px-VinFast_VF_8_%28cropped%29.jpg"
+                        HinhAnh = "https://i.postimg.cc/ncms223T/image-2048x-6a14fef69c3e4.jpg"
                     });
+                    context.SaveChanges();
+                }
+                else if (vf8.HinhAnh != "https://i.postimg.cc/ncms223T/image-2048x-6a14fef69c3e4.jpg")
+                {
+                    vf8.HinhAnh = "https://i.postimg.cc/ncms223T/image-2048x-6a14fef69c3e4.jpg";
                     context.SaveChanges();
                 }
             }
